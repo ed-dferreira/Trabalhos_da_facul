@@ -1,4 +1,4 @@
-package MAIUSCULAS_vs_minusculas;
+package Trabalhos_da_facul;
 import java.util.Scanner;
 public class jogo {
     public static void main(String[] args) {

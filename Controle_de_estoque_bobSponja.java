@@ -1,4 +1,4 @@
-package MAIUSCULAS_vs_minusculas;
+package Trabalhos_da_facul;
 import java.util.Scanner;
 public class Controle_de_estoque_bobSponja {
     public static void main(String[] args){
