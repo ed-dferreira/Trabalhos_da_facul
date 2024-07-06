@@ -9,6 +9,8 @@ public class RinhaDeLetras {
     private static String usadasMaiusculas = "";
     private static Set<Character> letrasUsadas = new HashSet<>();
 
+    boolean verificadorDeLetras = false;
+
     public RinhaDeLetras() { // Inicia o tabuleiro // check
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
@@ -16,7 +18,6 @@ public class RinhaDeLetras {
             }
         }
     }
-//f´0qahy´fg´0i
     public static void main(String[] args) {
         RinhaDeLetras jogo = new RinhaDeLetras();
         Scanner scanner = new Scanner(System.in);
@@ -45,37 +46,21 @@ public class RinhaDeLetras {
         scanner.close();
     }
 
-    public static boolean verificarLetras(int i, int j, char letra) {
+
+    
+
+
+    public static boolean verificarLetras(int i, int j, char letra, boolean letraGuardada) { // check
         if (i < 0 || i >= 3 || j < 0 || j >= 3 || tabuleiro[i][j] != '-') {
             return false; // Posição fora da matriz ou já ocupada
         }
         if (letra >= 'a' && letra <= 'z'){
-
-        }
-        char maiuscula = Character.toUpperCase(letra);
-        if (letra != maiuscula) {
-
-        }
-        char letraAtual = vezMaiuscula ? 'M' : 'm';
-        char outraLetra = vezMaiuscula ? 'm' : 'M';
-
-
-
-        // Coloca a letra no tabuleiro
-        tabuleiro[i][j] = letraAtual;
-
-        // Atualiza as letras usadas
-        if (vezMaiuscula) {
-            usadasMaiusculas += letraAtual;
-        } else {
-            usadasMinusculas += letraAtual;
-        }
-
-        vezMaiuscula = !vezMaiuscula; // Alternar a vez entre maiúsculas e minúsculas
-        return true;
+            return true; // Letra valida
+        } else 
+            return false; //letra invalida
     }
 
-    public static void escreverTabuleiro() { // check
+    public static void escreverTabuleiro() { // check+-
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
                 System.out.print(tabuleiro[i][j] + " ");
@@ -84,7 +69,7 @@ public class RinhaDeLetras {
         }
     }
 
-    public static boolean verificarGanhador() { // check
+    public static boolean verificarGanhador() { // check+-
         for (int i = 0; i < 3; i++) {
             if (tabuleiro[i][0] != '-' && tabuleiro[i][0] == tabuleiro[i][1] &&
                 tabuleiro[i][1] == tabuleiro[i][2]) {
