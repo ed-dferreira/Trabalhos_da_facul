@@ -16,7 +16,7 @@ public class RinhaDeLetras {
             }
         }
     }
-
+//f´0qahy´fg´0i
     public static void main(String[] args) {
         RinhaDeLetras jogo = new RinhaDeLetras();
         Scanner scanner = new Scanner(System.in);
@@ -48,6 +48,13 @@ public class RinhaDeLetras {
     public static boolean verificarLetras(int i, int j, char letra) {
         if (i < 0 || i >= 3 || j < 0 || j >= 3 || tabuleiro[i][j] != '-') {
             return false; // Posição fora da matriz ou já ocupada
+        }
+        if (letra >= 'a' && letra <= 'z'){
+
+        }
+        char maiuscula = Character.toUpperCase(letra);
+        if (letra != maiuscula) {
+
         }
         char letraAtual = vezMaiuscula ? 'M' : 'm';
         char outraLetra = vezMaiuscula ? 'm' : 'M';
