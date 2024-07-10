@@ -11,7 +11,7 @@ public class A_Grande_Batalha_das_Letras {
     static char[][] tabuleiro = new char[3][3]; //cria a matriz do tabuleiro
     static boolean vezMinuscula = true; // Começa com as minusculas
     static Set<Character> letrasMaiusculasUsadas = new HashSet<>(); //armazenam as letras maiusculas
-    static Set<Character> letrasMinusculasUsadas = new HashSet<>(); //armazenam as letras mainusculas
+    static Set<Character> letrasMinusculasUsadas = new HashSet<>(); //armazenam as letras minusculas
     static Scanner scanner = new Scanner(System.in);
     static boolean ganhouMesmo = false; 
 
@@ -23,7 +23,7 @@ public class A_Grande_Batalha_das_Letras {
         }
     }
 
-    public static void mostraTabuleiro() { //mostra o tabuleiro dutante o jogo
+    public static void mostraTabuleiro() { //mostra o tabuleiro durante o jogo
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
                 System.out.print(tabuleiro[i][j] + " ");
@@ -39,42 +39,79 @@ public class A_Grande_Batalha_das_Letras {
         System.out.println("1. Para um novo jogo.");
         System.out.println("2. Para carregar um jogo salvo?");
         int escolha = scanner.nextInt();
-        if (escolha == 2){
-            carregarJogo();
-        }
-        System.out.println("Seja bem vindo a eterna batalha das letras:"); //mudei um pouco a lore
-        System.out.println("O objetivo é construir uma ponte completa de tamanho até o outro lado!");
-        System.out.println("QUE COMECE A BATALHA!");
-        primeiroTabuleiro(); //só roda uma vez
-        while (true) {
-            mostraTabuleiro();
-            char jogadorDaVez = vezMinuscula ? 'm' : 'M'; //aqui é um operador ternario pique if else
-            System.out.println("Jogador: " + jogadorDaVez + ", digite a posição da linha:");
-            int linha = scanner.nextInt();
-            System.out.println("Jogador: " + jogadorDaVez + ", digite a posição da coluna:");
-            int coluna = scanner.nextInt();
-            System.out.println("Qual a letra irá para batalha:");
-            char letra = scanner.next().charAt(0);
-            // Verifica se a letra está em uma posição válida
-            if (linha >= 0 && linha < 3 && coluna >= 0 && coluna < 3 && AdicionarEVerificarLetras(linha, coluna, letra)) {
-                // Verificar se alguem ganhou
-                ganhouMesmo = verificarVitoria(); 
-                if (ganhouMesmo) {
+        switch (escolha) {
+            case 1:
+                System.out.println("Seja bem vindo à eterna batalha das letras:"); // ajustei a mensagem
+                System.out.println("O objetivo é construir uma ponte completa de tamanho 3 até o outro lado!");
+                System.out.println("QUE COMECE A BATALHA!");
+                primeiroTabuleiro(); // função a ser definida
+                while (true) {
                     mostraTabuleiro();
-                    System.out.println("Os guerreiros " + jogadorDaVez + " venceram!");
-                    break;
+                    char jogadorDaVez = vezMinuscula ? 'm' : 'M';
+                    System.out.println("Jogador: " + jogadorDaVez + ", digite a posição da linha:");
+                    int linha = scanner.nextInt();
+                    System.out.println("Jogador: " + jogadorDaVez + ", digite a posição da coluna:");
+                    int coluna = scanner.nextInt();
+                    System.out.println("Qual a letra irá para batalha:");
+                    char letra = scanner.next().charAt(0);
+                    // Verifica se a letra está em uma posição válida
+                    if (linha >= 0 && linha < 3 && coluna >= 0 && coluna < 3 && AdicionarEVerificarLetras(linha, coluna, letra)) {
+                        // Verificar se alguém ganhou
+                        ganhouMesmo = verificarVitoria();
+                        if (ganhouMesmo) {
+                            mostraTabuleiro();
+                            System.out.println("Os guerreiros " + jogadorDaVez + " venceram!");
+                            break;
+                        }
+                        vezMinuscula = !vezMinuscula;
+                    } else {
+                        System.out.println("Posição fora do tabuleiro ou letra inválida. Tente outra vez.");
+                    }
+                    System.out.println("Deseja salvar o jogo? s/n");
+                    char salvarGame = scanner.next().charAt(0);
+                    if (salvarGame == 's') {
+                        salvarJogo();
+                        break;
+                    }
                 }
-                vezMinuscula = !vezMinuscula;
-            } else {
-                System.out.println("Posição fora do tabuleiro ou letra inválida. Tente outra vez.");
-            }
-            System.out.println("Deseja salvar o jogo? s/n");
-            char salvarGame = scanner.next().charAt(0);
-            if (salvarGame == 's'){
-                salvarJogo();
+                break;
+            case 2:
+                carregarJogo();
+                while (true) {
+                    mostraTabuleiro();
+                    char jogadorDaVez = vezMinuscula ? 'm' : 'M';
+                    System.out.println("Jogador: " + jogadorDaVez + ", digite a posição da linha:");
+                    int linha = scanner.nextInt();
+                    System.out.println("Jogador: " + jogadorDaVez + ", digite a posição da coluna:");
+                    int coluna = scanner.nextInt();
+                    System.out.println("Qual a letra irá para batalha:");
+                    char letra = scanner.next().charAt(0);
+                    // Verifica se a letra está em uma posição válida
+                    if (linha >= 0 && linha < 3 && coluna >= 0 && coluna < 3 && AdicionarEVerificarLetras(linha, coluna, letra)) {
+                        // Verificar se alguém ganhou
+                        ganhouMesmo = verificarVitoria();
+                        if (ganhouMesmo) {
+                            mostraTabuleiro();
+                            System.out.println("Os guerreiros " + jogadorDaVez + " venceram!");
+                            break;
+                        }
+                        vezMinuscula = !vezMinuscula;
+                    } else {
+                        System.out.println("Posição fora do tabuleiro ou letra inválida. Tente outra vez.");
+                    }
+                    System.out.println("Deseja salvar o jogo? s/n");
+                    char salvarGame = scanner.next().charAt(0);
+                    if (salvarGame == 's') {
+                        salvarJogo();
+                        break;
+                    }
+                }
+            default:
+                System.out.println("Escolha inválida. Encerrando o programa.");
+                break;
             }
         }
-    }
+
 
     public static boolean AdicionarEVerificarLetras(int linha, int coluna, char letra) {
         if (linha < 0 || linha > 2 || coluna < 0 || coluna > 2) {
@@ -141,7 +178,7 @@ public class A_Grande_Batalha_das_Letras {
     }
 
     public static void salvarJogo() {
-        try (FileWriter writer = new FileWriter("estado_do_batalha!.txt")) { //esse try maluco fecha o FileWriter no final
+        try (FileWriter writer = new FileWriter("estado_da_batalha!.txt")) { //esse try maluco fecha o FileWriter no final
             writer.write((vezMinuscula ? 'm' : 'M') + "\n"); //escreve a vez
             writer.write(letrasMinusculasUsadas + "\n"); //agora as letras
             writer.write(letrasMaiusculasUsadas + "\n");
@@ -158,25 +195,39 @@ public class A_Grande_Batalha_das_Letras {
     }
 
     static void carregarJogo() {
-        try (BufferedReader reader = new BufferedReader(new FileReader("estado_do_batalha!.txt"))) {
+        try (BufferedReader reader = new BufferedReader(new FileReader("estado_da_batalha!.txt"))) {
             vezMinuscula = reader.readLine().charAt(0) == 'M';
             System.out.println("Vez minúscula: " + vezMinuscula); // Verifica a leitura da vez
+    
             String letrasMinusculas = reader.readLine();
+            letrasMinusculas = letrasMinusculas.substring(1, letrasMinusculas.length() - 1); // Remove colchetes
+            if (!letrasMinusculas.isEmpty()) {
+                String[] letrasArray = letrasMinusculas.split(", ");
+                for (String letra : letrasArray) {
+                    letrasMinusculasUsadas.add(letra.charAt(0));
+                }
+            }
             System.out.println("Letras minúsculas usadas: " + letrasMinusculas); // Verifica as letras minúsculas usadas
+    
             String letrasMaiusculas = reader.readLine();
+            letrasMaiusculas = letrasMaiusculas.substring(1, letrasMaiusculas.length() - 1); // Remove colchetes
+            if (!letrasMaiusculas.isEmpty()) {
+                String[] letrasArray = letrasMaiusculas.split(", ");
+                for (String letra : letrasArray) {
+                    letrasMaiusculasUsadas.add(letra.charAt(0));
+                }
+            }
             System.out.println("Letras maiúsculas usadas: " + letrasMaiusculas); // Verifica as letras maiúsculas usadas
-            for (int i = 0; i < 3; i++) { //preenche o tabuleiro
+    
+            for (int i = 0; i < 3; i++) { //preenche a matriz
                 String linha = reader.readLine();
                 for (int j = 0; j < 3; j++) {
                     tabuleiro[i][j] = linha.charAt(j);
                 }
             }
-            System.out.println("Tabuleiro carregado:");
-            mostraTabuleiro(); // mostra ele carregado
-            System.out.println("Batalha carregada!");
+            System.out.println("Batalha carregada");
         } catch (IOException e) {
             System.out.println("Erro ao carregar o jogo: " + e.getMessage());
         }
     }
-    
 }    
