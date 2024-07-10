@@ -40,3 +40,45 @@ public static void carregarJogo() {
     }
 }
 }
+
+
+
+public static boolean verificarLetras(int linha, int coluna, char letra) {
+    if (linha < 0 || linha > 2 || coluna < 0 || coluna > 2) {
+        return false; // Posição fora do tabuleiro
+    }
+
+    if (tabuleiro[linha][coluna] == '-') { // Espaço vazio
+        if (Character.isLetter(letra)) {
+            if (vezMaiuscula && Character.isUpperCase(letra) && !letrasMaiusculasUsadas.contains(letra)) {
+                tabuleiro[linha][coluna] = letra;
+                letrasMaiusculasUsadas.add(letra);
+                usadasMaiusculas += letra;
+                return true;
+            } else if (!vezMaiuscula && Character.isLowerCase(letra) && !letrasMinusculasUsadas.contains(letra)) {
+                tabuleiro[linha][coluna] = letra;
+                letrasMinusculasUsadas.add(letra);
+                usadasMinusculas += letra;
+                return true;
+            }
+        }
+    } else { // Espaço ocupado
+        char letraNoTabuleiro = tabuleiro[linha][coluna];
+        if (vezMaiuscula && Character.isUpperCase(letra) && Character.isLowerCase(letraNoTabuleiro) &&
+                letra > Character.toUpperCase(letraNoTabuleiro) && !letrasMaiusculasUsadas.contains(letra)) {
+            tabuleiro[linha][coluna] = letra;
+            letrasMaiusculasUsadas.add(letra);
+            usadasMaiusculas += letra;
+            return true;
+        } else if (!vezMaiuscula && Character.isLowerCase(letra) && Character.isUpperCase(letraNoTabuleiro) &&
+                Character.toUpperCase(letra) > letraNoTabuleiro && !letrasMinusculasUsadas.contains(letra)) {
+            tabuleiro[linha][coluna] = letra;
+            letrasMinusculasUsadas.add(letra);
+            usadasMinusculas += letra;
+            return true;
+        }
+    }
+
+    return false;
+}
+}

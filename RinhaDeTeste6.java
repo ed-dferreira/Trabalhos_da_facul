@@ -4,14 +4,13 @@ import java.util.HashSet;
 import java.util.Scanner;
 import java.util.Set;
 
-public class RinhaDeTeste5 {
+public class RinhaDeTeste6 {
     static char[][] tabuleiro = new char[3][3];
     static boolean vezMaiuscula = false; // Começa com minúscula
-    static String usadasMinusculas = "";
-    static String usadasMaiusculas = "";
     static Set<Character> letrasMaiusculasUsadas = new HashSet<>();
     static Set<Character> letrasMinusculasUsadas = new HashSet<>();
     static Scanner scanner = new Scanner(System.in);
+    static boolean ganhouMesmo = false; // Declarado como estático
 
     public static void main(String[] args) {
         inicializarTabuleiro();
@@ -30,9 +29,9 @@ public class RinhaDeTeste5 {
                     verificarLetras(linha, coluna, letra)) {
 
                 // Verificar se houve vitória
-                boolean vitoria = verificarVitoria();
+                ganhouMesmo = verificarVitoria(); // Atribui o resultado à variável ganhouMesmo
 
-                if (vitoria) {
+                if (ganhouMesmo) {
                     escreverTabuleiro();
                     System.out.println("Jogador " + jogadorDaVez + " venceu!");
                     break;
@@ -73,12 +72,10 @@ public class RinhaDeTeste5 {
                 if (vezMaiuscula && Character.isUpperCase(letra) && !letrasMaiusculasUsadas.contains(letra)) {
                     tabuleiro[linha][coluna] = letra;
                     letrasMaiusculasUsadas.add(letra);
-                    usadasMaiusculas += letra;
                     return true;
                 } else if (!vezMaiuscula && Character.isLowerCase(letra) && !letrasMinusculasUsadas.contains(letra)) {
                     tabuleiro[linha][coluna] = letra;
                     letrasMinusculasUsadas.add(letra);
-                    usadasMinusculas += letra;
                     return true;
                 }
             }
@@ -88,13 +85,11 @@ public class RinhaDeTeste5 {
                     letra > Character.toUpperCase(letraNoTabuleiro) && !letrasMaiusculasUsadas.contains(letra)) {
                 tabuleiro[linha][coluna] = letra;
                 letrasMaiusculasUsadas.add(letra);
-                usadasMaiusculas += letra;
                 return true;
             } else if (!vezMaiuscula && Character.isLowerCase(letra) && Character.isUpperCase(letraNoTabuleiro) &&
                     Character.toUpperCase(letra) > letraNoTabuleiro && !letrasMinusculasUsadas.contains(letra)) {
                 tabuleiro[linha][coluna] = letra;
                 letrasMinusculasUsadas.add(letra);
-                usadasMinusculas += letra;
                 return true;
             }
         }
@@ -105,51 +100,41 @@ public class RinhaDeTeste5 {
     public static boolean verificarVitoria() {
         // Verificar linhas
         for (int i = 0; i < 3; i++) {
-            if (tabuleiro[i][0] != '-' && tabuleiro[i][0] == tabuleiro[i][1] && tabuleiro[i][1] == tabuleiro[i][2]) {
-                if (Character.isUpperCase(tabuleiro[i][0]) && letrasMaiusculasUsadas.contains(tabuleiro[i][0])) {
-                    System.out.println("Vitória nas linhas maiúsculas!");
-                    return true; // Linha com letras maiúsculas
-                } else if (Character.isLowerCase(tabuleiro[i][0]) && letrasMinusculasUsadas.contains(tabuleiro[i][0])) {
-                    System.out.println("Vitória nas linhas minúsculas!");
-                    return true; // Linha com letras minúsculas
-                }
+            if ((Character.isLowerCase(tabuleiro[i][0]) && Character.isLowerCase(tabuleiro[i][1]) &&
+                    Character.isLowerCase(tabuleiro[i][2])) ||
+                    (Character.isUpperCase(tabuleiro[i][0]) && Character.isUpperCase(tabuleiro[i][1]) &&
+                            Character.isUpperCase(tabuleiro[i][2]))) {
+                return true;
             }
         }
 
         // Verificar colunas
         for (int i = 0; i < 3; i++) {
-            if (tabuleiro[0][i] != '-' && tabuleiro[0][i] == tabuleiro[1][i] && tabuleiro[1][i] == tabuleiro[2][i]) {
-                if (Character.isUpperCase(tabuleiro[0][i]) && letrasMaiusculasUsadas.contains(tabuleiro[0][i])) {
-                    System.out.println("Vitória nas colunas maiúsculas!");
-                    return true; // Coluna com letras maiúsculas
-                } else if (Character.isLowerCase(tabuleiro[0][i]) && letrasMinusculasUsadas.contains(tabuleiro[0][i])) {
-                    System.out.println("Vitória nas colunas minúsculas!");
-                    return true; // Coluna com letras minúsculas
-                }
+            if ((Character.isLowerCase(tabuleiro[0][i]) && Character.isLowerCase(tabuleiro[1][i]) &&
+                    Character.isLowerCase(tabuleiro[2][i])) ||
+                    (Character.isUpperCase(tabuleiro[0][i]) && Character.isUpperCase(tabuleiro[1][i]) &&
+                            Character.isUpperCase(tabuleiro[2][i]))) {
+                return true;
             }
         }
 
-        // Verificar diagonais
-        if (tabuleiro[0][0] != '-' && tabuleiro[0][0] == tabuleiro[1][1] && tabuleiro[1][1] == tabuleiro[2][2]) {
-            if (Character.isUpperCase(tabuleiro[0][0]) && letrasMaiusculasUsadas.contains(tabuleiro[0][0])) {
-                System.out.println("Vitória na diagonal principal maiúscula!");
-                return true; // Diagonal principal com letras maiúsculas
-            } else if (Character.isLowerCase(tabuleiro[0][0]) && letrasMinusculasUsadas.contains(tabuleiro[0][0])) {
-                System.out.println("Vitória na diagonal principal minúscula!");
-                return true; // Diagonal principal com letras minúsculas
-            }
+        // Verificar diagonal principal
+        if ((Character.isLowerCase(tabuleiro[0][0]) && Character.isLowerCase(tabuleiro[1][1]) &&
+                Character.isLowerCase(tabuleiro[2][2])) ||
+                (Character.isUpperCase(tabuleiro[0][0]) && Character.isUpperCase(tabuleiro[1][1]) &&
+                        Character.isUpperCase(tabuleiro[2][2]))) {
+            return true;
         }
 
-        if (tabuleiro[0][2] != '-' && tabuleiro[0][2] == tabuleiro[1][1] && tabuleiro[1][1] == tabuleiro[2][0]) {
-            if (Character.isUpperCase(tabuleiro[0][2]) && letrasMaiusculasUsadas.contains(tabuleiro[0][2])) {
-                System.out.println("Vitória na diagonal secundária maiúscula!");
-                return true; // Diagonal secundária com letras maiúsculas
-            } else if (Character.isLowerCase(tabuleiro[0][2]) && letrasMinusculasUsadas.contains(tabuleiro[0][2])) {
-                System.out.println("Vitória na diagonal secundária minúscula!");
-                return true; // Diagonal secundária com letras minúsculas
-            }
+        // Verificar diagonal secundária
+        if ((Character.isLowerCase(tabuleiro[0][2]) && Character.isLowerCase(tabuleiro[1][1]) &&
+                Character.isLowerCase(tabuleiro[2][0])) ||
+                (Character.isUpperCase(tabuleiro[0][2]) && Character.isUpperCase(tabuleiro[1][1]) &&
+                        Character.isUpperCase(tabuleiro[2][0]))) {
+            return true;
         }
 
+        // Se nenhuma condição de vitória foi encontrada, retorna false
         return false;
     }
 }
