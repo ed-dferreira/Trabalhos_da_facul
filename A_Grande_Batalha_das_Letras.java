@@ -107,7 +107,7 @@ public class A_Grande_Batalha_das_Letras {
                     }
                 }
             default:
-                System.out.println("Encerrando a batalha!.");
+                System.out.println("Encerrando a batalha!");
                 break;
             }
         }
