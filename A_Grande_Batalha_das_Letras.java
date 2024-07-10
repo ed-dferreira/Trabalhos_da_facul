@@ -196,28 +196,28 @@ public class A_Grande_Batalha_das_Letras {
 
     static void carregarJogo() {
         try (BufferedReader reader = new BufferedReader(new FileReader("estado_da_batalha!.txt"))) {
-            vezMinuscula = reader.readLine().charAt(0) == 'M';
-            System.out.println("Vez minúscula: " + vezMinuscula); // Verifica a leitura da vez
+            vezMinuscula = reader.readLine().charAt(0) == 'M'; //try fecha o Buffered
+            System.out.println("Vez minúscula: " + vezMinuscula); // mostra quem joga
     
-            String letrasMinusculas = reader.readLine();
-            letrasMinusculas = letrasMinusculas.substring(1, letrasMinusculas.length() - 1); // Remove colchetes
+            String letrasMinusculas = reader.readLine(); //le as minusculas e tira os colchetes
+            letrasMinusculas = letrasMinusculas.substring(1, letrasMinusculas.length() - 1); 
             if (!letrasMinusculas.isEmpty()) {
                 String[] letrasArray = letrasMinusculas.split(", ");
                 for (String letra : letrasArray) {
                     letrasMinusculasUsadas.add(letra.charAt(0));
                 }
             }
-            System.out.println("Letras minúsculas usadas: " + letrasMinusculas); // Verifica as letras minúsculas usadas
+            System.out.println("Letras minúsculas usadas: " + letrasMinusculas); // le as minúsculas usadas
     
-            String letrasMaiusculas = reader.readLine();
-            letrasMaiusculas = letrasMaiusculas.substring(1, letrasMaiusculas.length() - 1); // Remove colchetes
+            String letrasMaiusculas = reader.readLine(); //le as maiusculas e tira os colchetes
+            letrasMaiusculas = letrasMaiusculas.substring(1, letrasMaiusculas.length() - 1);
             if (!letrasMaiusculas.isEmpty()) {
                 String[] letrasArray = letrasMaiusculas.split(", ");
                 for (String letra : letrasArray) {
                     letrasMaiusculasUsadas.add(letra.charAt(0));
                 }
             }
-            System.out.println("Letras maiúsculas usadas: " + letrasMaiusculas); // Verifica as letras maiúsculas usadas
+            System.out.println("Letras maiúsculas usadas: " + letrasMaiusculas); // le as maiusculas
     
             for (int i = 0; i < 3; i++) { //preenche a matriz
                 String linha = reader.readLine();
