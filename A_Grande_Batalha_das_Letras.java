@@ -157,26 +157,26 @@ public class A_Grande_Batalha_das_Letras {
         }
     }
 
-    public static void carregarJogo() {
+    static void carregarJogo() {
         try (BufferedReader reader = new BufferedReader(new FileReader("estado_do_batalha!.txt"))) {
             vezMinuscula = reader.readLine().charAt(0) == 'M';
+            System.out.println("Vez minúscula: " + vezMinuscula); // Verifica a leitura da vez
             String letrasMinusculas = reader.readLine();
+            System.out.println("Letras minúsculas usadas: " + letrasMinusculas); // Verifica as letras minúsculas usadas
             String letrasMaiusculas = reader.readLine();
-            for (int i = 0; i < letrasMinusculas.length(); i++) {
-                letrasMinusculasUsadas.add(letrasMinusculas.charAt(i)); //adiciona as letras
-            }
-            for (int i = 0; i < letrasMaiusculas.length(); i++) { //adiciona as letras
-                letrasMaiusculasUsadas.add(letrasMaiusculas.charAt(i));
-            }
+            System.out.println("Letras maiúsculas usadas: " + letrasMaiusculas); // Verifica as letras maiúsculas usadas
             for (int i = 0; i < 3; i++) { //preenche o tabuleiro
                 String linha = reader.readLine();
                 for (int j = 0; j < 3; j++) {
                     tabuleiro[i][j] = linha.charAt(j);
                 }
             }
+            System.out.println("Tabuleiro carregado:");
+            mostraTabuleiro(); // mostra ele carregado
             System.out.println("Batalha carregada!");
         } catch (IOException e) {
             System.out.println("Erro ao carregar o jogo: " + e.getMessage());
         }
     }
+    
 }    
