@@ -38,6 +38,7 @@ public class A_Grande_Batalha_das_Letras {
         System.out.println("Deseja começar o jogo ou carregar um jogo salvo?");
         System.out.println("1. Para um novo jogo.");
         System.out.println("2. Para carregar um jogo salvo?");
+        System.out.println("Qualquer outra escolha para sair do jogo!");
         int escolha = scanner.nextInt();
         switch (escolha) {
             case 1:
@@ -79,7 +80,7 @@ public class A_Grande_Batalha_das_Letras {
                 carregarJogo();
                 while (true) {
                     mostraTabuleiro();
-                    char jogadorDaVez = vezMinuscula ? 'm' : 'M';
+                    char jogadorDaVez = vezMinuscula ? 'm' : 'M'; // operador ternario pique if else
                     System.out.println("Jogador: " + jogadorDaVez + ", digite a posição da linha:");
                     int linha = scanner.nextInt();
                     System.out.println("Jogador: " + jogadorDaVez + ", digite a posição da coluna:");
@@ -111,7 +112,6 @@ public class A_Grande_Batalha_das_Letras {
                 break;
             }
         }
-
 
     public static boolean AdicionarEVerificarLetras(int linha, int coluna, char letra) {
         if (linha < 0 || linha > 2 || coluna < 0 || coluna > 2) {
@@ -210,7 +210,7 @@ public class A_Grande_Batalha_das_Letras {
 
             String letrasMinusculas = reader.readLine(); // guarda as minusculas
             letrasMinusculasUsadas.clear();
-            for (char c : letrasMinusculas.toCharArray()) {
+            for (char c : letrasMinusculas.toCharArray()) { //converte em char
                 letrasMinusculasUsadas.add(c);
             }
             System.out.println("Letras minúsculas usadas: " + letrasMinusculas); 
@@ -234,6 +234,9 @@ public class A_Grande_Batalha_das_Letras {
         }
     }
 }
+//  static Set<Character> letrasMinusculasUsadas = new HashSet<>(); //armazenam as letras minusculas
+//  letrasMinusculasUsadas.add(c); adiona na paradinha de cima
+//
 /*
  * Alternativa 2: MAIÚSCULAS vs. minúsculas
 Você deve criar um programa para um jogo que ocorre em uma matriz 3 x 3
