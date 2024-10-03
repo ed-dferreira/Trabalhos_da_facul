@@ -1,5 +1,11 @@
 package estudantes.entidades;
-import professor.entidades.*;
+
+import professor.entidades.Fiscal;
+import professor.entidades.Caixa;
+import professor.entidades.Sacola;
+import professor.entidades.Supermercado;
+
+import java.util.LinkedList;
 
 /**
  * Classe que traz a lógica do algoritmo de "ensacolamento" dos produtos.
@@ -14,67 +20,64 @@ import professor.entidades.*;
  */
 public class Empacotador {
 
-    public int proximoCaixa = 1; //usada para saber para onde o empacotador deve ir
-
-    //Cria o Fiscal e os caixas
-
-    Fiscal fiscal1 = new Fiscal();
-    Fiscal fiscal2 = new Fiscal();
-    Fiscal fiscal3 = new Fiscal();
-    Fiscal fiscal4 = new Fiscal();
-    Fiscal fiscal5 = new Fiscal();
-
-
-    Caixa c1 = new Caixa(fiscal1);
-    Caixa c2 = new Caixa(fiscal2);
-    Caixa c3 = new Caixa(fiscal3);
-    Caixa c4 = new Caixa(fiscal4);
-    Caixa c5 = new Caixa(fiscal5);
+    public int proximoCaixa = 1; // Usada para saber para onde o empacotador deve ir
 
 
 
+    Caixa caixa;
+    Fiscal fiscal;
 
-    /**
-     * Executa a lógica de empacotamento e troca de caixa.
-     * Esse método é o único método de controle invocado durante a simulação
-     * do supermercado.
-     * <br><br>
-     * Aqui podem ser feitas todas as verificações sobre os produtos no monte e
-     * nas sacolas do caixa em que o empacotador está. A partir dessas informações,
-     * você pode colocar produtos do monte daquele caixa em sacolas e despachar
-     * sacolas para o fiscal.
-     * <br><br>
-     * O atributo "proximoCaixa" é usado pelo simulador para mover o empacotador
-     * para outro caixa (ou permanecer no mesmo se ele quiser), ou seja, o
-     * empacotador sempre vai para o caixa do número indicado nesse atributo
-     * após um ciclo de simulação.
-     * <br><br>
-     * <strong>O empacotador não pode levar produtos com ele</strong> de um
-     * caixa para outro, ou seja, você não deve criar atributos com vetores,
-     * matrizes ou coleções (ArrayList, HashSet etc.) de produtos.
-     * @param caixa o caixa onde está o empacotador
-     * @param fiscal fiscal que pode ser consultado sobre as sacolas despachadas
-     */
-    public void agir(Caixa caixa, Fiscal fiscal){
+    Sacola sacola;
 
 
 
-        Sacola s1 = new Sacola();
-        s1.contarProdutosNaSacola();
-        s1.getArrayDaSacola();
+    public void agir(Caixa caixa, Fiscal fiscal) {
 
-        c1.getSacola(1); //tira uma sacola do caixa então
+        caixa.getSacola(1); //pega uma sacola
 
+        caixa.despacharSacola(1); // só manda para o fiscal
 
-        //s1.colocarProdutoNaSacola();
-        //s1.pegarProdutoDaSacola();
+        caixa.reporSacolas(); // Todos os espaços do caixa sem sacolas recebem novas sacolas vazias.
 
-        //fiscal.despachar(Sacola s1); // falta as sacolas
+        caixa.contarProdutosNoMonte(); //vetor sem ordem definida do monte mas só faz isso e nada mais
 
+        //caixa.pegarProdutoDoMonte(); // retira do monte o produto
+
+        //fiscal.despachar(); //alguma sacola
 
         fiscal.contarSacolasDespachadas();
-        fiscal.getArrayDasSacolasDespachos();
+
+        fiscal.getArrayDasSacolasDespachos(); //faz só isso mesmo
+
+
+
+        //sacola.colocarProdutoNaSacola(); //retorna um size ou int
+
+        sacola.getArrayDaSacola(); //só mostra o array mesmo
+
+       // sacola.colocarProdutoNaSacola(); //adiciona a sacola e calcula o peso
+
+        //sacola.pegarProdutoDaSacola();
+
+
+
+
+
+       //codigo aqui
+
+        // separar produtos de acordo com tipo de objeto
 
     }
-
 }
+/*
+ * O atributo "proximoCaixa" é usado pelo simulador para mover o empacotador
+ * para outro caixa (ou permanecer no mesmo se ele quiser), ou seja, o
+ * empacotador sempre vai para o caixa do número indicado nesse atributo
+ * após um ciclo de simulação.
+ *
+ *  * <strong>O empacotador não pode levar produtos com ele</strong> de um
+ * caixa para outro, ou seja, você não deve criar atributos com vetores,
+ * matrizes ou coleções (ArrayList, HashSet etc.) de produtos.
+ * @param caixa o caixa onde está o empacotador
+ * @param fiscal fiscal que pode ser consultado sobre as sacolas despachadas
+ */
