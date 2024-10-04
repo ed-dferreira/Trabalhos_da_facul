@@ -6,6 +6,9 @@ import professor.entidades.Sacola;
 import professor.entidades.Supermercado;
 
 import java.util.LinkedList;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.Random;
 
 /**
  * Classe que traz a lógica do algoritmo de "ensacolamento" dos produtos.
@@ -19,65 +22,120 @@ import java.util.LinkedList;
  * @version 1.0
  */
 public class Empacotador {
-
+    Random random = new Random();
     public int proximoCaixa = 1; // Usada para saber para onde o empacotador deve ir
 
-
-
-    Caixa caixa;
-    Fiscal fiscal;
-
-    Sacola sacola;
-
-
-
     public void agir(Caixa caixa, Fiscal fiscal) {
+        //private boolean crescente = true;
 
-        caixa.getSacola(1); //pega uma sacola
+        adicionarProdutosAoMonte(caixa);
+        ensacolarProdutos(caixa);
+    }
 
-        caixa.despacharSacola(1); // só manda para o fiscal
+    private void adicionarProdutosAoMonte(Caixa caixa) {
+        // Criando instâncias de produtos de Limpeza e adicionando ao monte
+        for (int i = 0; i < 20; i++) {
+            Limpeza produtoLimpeza = new Limpeza(i, "Produto de Limpeza " + i, "Fabricante " + i, 100 + (i * 10));
+            caixa.colocarProdutoNoMonte(produtoLimpeza); // Adiciona produto ao monte através do caixa
+        }
 
-        caixa.reporSacolas(); // Todos os espaços do caixa sem sacolas recebem novas sacolas vazias.
+        // Criando instâncias de Cuidados Pessoais (Cosméticos) e adicionando ao monte
+        for (int i = 0; i < 20; i++) {
+            long validadeCosmetico = System.currentTimeMillis() + (i * 24 * 60 * 60 * 1000); // Exemplo de validade crescente
+            Cosmetico cosmetico = new Cosmetico(i + 20, "Cosmetico " + i, "Fabricante " + (i + 20), 50 + (i * 5),
+                    validadeCosmetico, "Fragrância " + i, (char) ('A' + (i % 4)));
+            caixa.colocarProdutoNoMonte(cosmetico); // Adiciona produto ao monte através do caixa
+        }
 
-        caixa.contarProdutosNoMonte(); //vetor sem ordem definida do monte mas só faz isso e nada mais
+        // Criando instâncias de Higiene e adicionando ao monte
+        for (int i = 0; i < 20; i++) {
+            long validadeHigiene = System.currentTimeMillis() + (i * 30 * 24 * 60 * 60 * 1000); // Exemplo de validade crescente
+            Higiene higiene = new Higiene(i + 40, "Higiene " + i, "Fabricante " + (i + 40), 70 + (i * 10), validadeHigiene,
+                    "Fragrância " + i);
+            caixa.colocarProdutoNoMonte(higiene); // Adiciona produto ao monte através do caixa
+        }
 
-        //caixa.pegarProdutoDoMonte(); // retira do monte o produto
+        // Criando instâncias de Papelaria e adicionando ao monte
+        for (int i = 0; i < 20; i++) {
+            Papelaria papelaria = new Papelaria(i + 100, "Produto de Papelaria " + i, "Fabricante " + (i + 100), 200 + (i * 15));
+            caixa.colocarProdutoNoMonte(papelaria); // Adiciona produto ao monte através do caixa
+        }
 
-        //fiscal.despachar(); //alguma sacola
+        // Criando instâncias de Eletroeletrônicos e adicionando ao monte
+        for (int i = 0; i < 20; i++) {
+            Eletroeletronico eletroeletronico = new Eletroeletronico(i + 80, "Eletroeletrônico " + i, "Fabricante " + (i + 80),
+                    300 + (i * 25), (short) (110 + (i % 20)));
+            caixa.colocarProdutoNoMonte(eletroeletronico); // Adiciona produto ao monte através do caixa
+        }
 
-        fiscal.contarSacolasDespachadas();
+        // Criando instâncias de Produtos Alimentícios Não Perecíveis e adicionando ao monte
+        for (int i = 0; i < 20; i++) {
+            long validadeNaoPerecivel = System.currentTimeMillis() + (i * 365 * 24 * 60 * 60 * 1000); // Validade anual crescente
+            NaoPerecivel alimentoNaoPerecivel = new NaoPerecivel(i + 40, "Alimento Não Perecível " + i, "Fabricante " + (i + 40),
+                    150 + (i * 12), validadeNaoPerecivel, "Tipo de Armazenamento " + i);
+            caixa.colocarProdutoNoMonte(alimentoNaoPerecivel); // Adiciona produto ao monte através do caixa
+        }
 
-        fiscal.getArrayDasSacolasDespachos(); //faz só isso mesmo
+        // Criando instâncias de Produtos Alimentícios Perecíveis e adicionando ao monte
+        for (int i = 0; i < 20; i++) {
+            long validadePerecivel = System.currentTimeMillis() + (i * 15 * 24 * 60 * 60 * 1000); // Exemplo de validade curta
+        }
+        proximoCaixa++;
+    }
+
+    // criar um if para separar os tipos de produto
+
+    private void ensacolarProdutos(Caixa caixa) {
+        // Índice da sacola que será usada para adicionar produtos (1 a 5)
+        int numeroSacola = 1;
+
+        caixa.contarProdutosNoMonte();
+
+        for (Produto produto : caixa.getArrayDoMonte()) {
+            // Tentar remover o produto do monte
+            Produto removido = caixa.pegarProdutoDoMonte(produto);
+            if (removido != null) {
+                caixa.getSacola(numeroSacola).colocarProdutoNaSacola(removido);
+                caixa.getSacola(numeroSacola).contarProdutosNaSacola();
+                //caixa.getSacola(numeroSacola).pegarProdutoDaSacola(removido);
 
 
 
-        //sacola.colocarProdutoNaSacola(); //retorna um size ou int
 
-        sacola.getArrayDaSacola(); //só mostra o array mesmo
+                // Incrementar o número da sacola (1 a 5) de forma circular
+                numeroSacola++;
+                if (numeroSacola > Caixa.QUANTIDADE_DE_SACOLAS_NO_CAIXA) {
+                    numeroSacola = 1;
+                }
 
-       // sacola.colocarProdutoNaSacola(); //adiciona a sacola e calcula o peso
+            }
+        }
+        Supermercado s1 = new Supermercado();
+        s1.getAdvertencias();
+        s1.getRegrasQuebradas();
+        s1.getSacolasRasgadas();
 
-        //sacola.pegarProdutoDaSacola();
+      //  Fiscal.SacolasDespachadas(); erro
 
 
+        // Despachar todas sacolas que ainda possuem produtos após a distribuição
+        for (int i = 1; i <= Caixa.QUANTIDADE_DE_SACOLAS_NO_CAIXA; i++) {
+            Sacola sacola = caixa.getSacola(i);
+            if (sacola != null && sacola.contarProdutosNaSacola() > 0) {//por o peso aqui tambem e devolver um valor para o switch case até fazer o produto ser mais pesado que 1kg e menos de 5kg
+                caixa.despacharSacola(i);
+                caixa.reporSacolas();
+            }
+        }
 
-
-
-       //codigo aqui
-
-        // separar produtos de acordo com tipo de objeto
 
     }
+
+    private int calcularPesoSacola(Sacola sacola) {
+        Produto[] produtos = sacola.getArrayDaSacola();
+        int pesoTotal = 0;
+        for (Produto p : produtos) {
+            pesoTotal += p.getPeso();
+        }
+        return pesoTotal;
+    }
 }
-/*
- * O atributo "proximoCaixa" é usado pelo simulador para mover o empacotador
- * para outro caixa (ou permanecer no mesmo se ele quiser), ou seja, o
- * empacotador sempre vai para o caixa do número indicado nesse atributo
- * após um ciclo de simulação.
- *
- *  * <strong>O empacotador não pode levar produtos com ele</strong> de um
- * caixa para outro, ou seja, você não deve criar atributos com vetores,
- * matrizes ou coleções (ArrayList, HashSet etc.) de produtos.
- * @param caixa o caixa onde está o empacotador
- * @param fiscal fiscal que pode ser consultado sobre as sacolas despachadas
- */
