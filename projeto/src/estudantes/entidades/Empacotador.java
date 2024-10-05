@@ -73,6 +73,18 @@ public class Empacotador {
     private void ensacolarProdutos(Caixa caixa, Fiscal fiscal, int proximoCaixa) {
         int numeroSacola = 1;
 
+        int quantidadeMonte = caixa.contarProdutosNoMonte();
+
+        int quantidadeSacola = caixa.getSacola(numeroSacola).contarProdutosNaSacola();
+
+        caixa.getSacola(numeroSacola).contarProdutosNaSacola();
+
+        caixa.getSacola(numeroSacola).getArrayDaSacola();
+
+        caixa.getArrayDoMonte();
+
+        //caixa.pegarProdutoDoMonte(Produto);
+
         for (Produto produto : caixa.getArrayDoMonte()) {
             Produto removido = caixa.pegarProdutoDoMonte(produto);
             if (proximoCaixa > 5) {
@@ -82,25 +94,30 @@ public class Empacotador {
                 Sacola sacolaAtual = caixa.getSacola(numeroSacola);
                 if (sacolaAtual != null) {
                     sacolaAtual.colocarProdutoNaSacola(removido);
-
-                    while (sacolaAcimaDoPeso(sacolaAtual)) {
-                        Produto produtoExtra = sacolaAtual.pegarProdutoDaSacola(produto);
-                        if (produtoExtra != null) {
-                            sacolaAtual.pegarProdutoDaSacola(produto);
-                        } else {
+                    switch (numeroSacola) {
+                        case 1:
+                            apenasRefrigerados(sacolaAtual, removido);
                             break;
-                        }
+                        case 2:
+                            apenasCuidadosPessoais(sacolaAtual, removido);
+                            break;
+                        case 3:
+                            apenasAlimenticios(sacolaAtual, removido);
+                            break;
+                        case 4:
+                            apenasLimpeza(sacolaAtual, removido);
+                            break;
+                        case 5:
+                            apenasEletroeletronico(sacolaAtual, removido);
+                            break;
+                        default:
+                            break;
                     }
 
-                    while (sacolaAbaixoDoPeso(sacolaAtual)) {
-                        sacolaAtual.colocarProdutoNaSacola(produto);
-                    }
-
-                    if (!sacolaAcimaDoPeso(sacolaAtual) && !sacolaAbaixoDoPeso(sacolaAtual)) {
+                    if (calculoPeso(caixa, sacolaAtual, produto)) {
                         fiscal.despachar(sacolaAtual);
                     }
                 }
-
                 numeroSacola++;
                 if (numeroSacola > 5) {
                     numeroSacola = 1;
@@ -108,6 +125,30 @@ public class Empacotador {
                 proximoCaixa++;
             }
         }
+    }
+
+    // refrigerados só podem estar com refrigerados
+    // e não podem ter temperaturas muito diferentes +- 15 graus
+    private boolean apenasRefrigerados(Sacola sacola, Produto removido) {
+        int temp;
+
+        return false; // Adicione a lógica apropriada aqui
+    }
+
+    private boolean apenasLimpeza(Sacola sacola, Produto removido) {
+        return false; // Adicione a lógica apropriada aqui
+    }
+
+    private boolean apenasEletroeletronico(Sacola sacola, Produto removido) {
+        return false; // Adicione a lógica apropriada aqui
+    }
+
+    private boolean apenasCuidadosPessoais(Sacola sacola, Produto removido) {
+        return false; // Adicione a lógica apropriada aqui
+    }
+
+    private boolean apenasAlimenticios(Sacola sacola, Produto removido) {
+        return false; // Adicione a lógica apropriada aqui
     }
 
     private boolean sacolaAcimaDoPeso(Sacola sacola) {
@@ -121,13 +162,26 @@ public class Empacotador {
             return false;
         }
     }
-
-    private boolean sacolaAbaixoDoPeso(Sacola sacola) {
+    private boolean sacolaAbaixoDoPeso (Sacola sacola){
         int pesoTotal = 0;
         for (Produto produto : sacola.getArrayDaSacola()) {
             pesoTotal += produto.getPeso();
         }
         if (pesoTotal < 1000) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    private boolean calculoPeso (Caixa caixa, Sacola sacola, Produto removido){
+        while (sacolaAcimaDoPeso(sacola)) {
+            sacola.pegarProdutoDaSacola(removido);
+        }
+        while (sacolaAbaixoDoPeso(sacola)) {
+            sacola.colocarProdutoNaSacola(removido);
+        }
+        if (!sacolaAbaixoDoPeso(sacola) && !sacolaAcimaDoPeso(sacola)) {
             return true;
         } else {
             return false;
