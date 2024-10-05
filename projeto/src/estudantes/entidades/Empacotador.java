@@ -12,75 +12,11 @@ public class Empacotador {
     public int proximoCaixa = 1;
     
     public void agir(Caixa caixa, Fiscal fiscal) {
-        while(true) {
-            adicionarProdutosAoMonte(caixa);
-            ensacolarProdutos(caixa, fiscal, proximoCaixa);
-            proximoCaixa++;
-            if (proximoCaixa > 5){
-                proximoCaixa = 1;
-            }
-        }
+        ensacolarProdutos(caixa, fiscal);
     }
 
-    private void adicionarProdutosAoMonte(Caixa caixa) {
-        int quantidadeItens = 10;
 
-        for (int i = 0; i < quantidadeItens; i++) {
-            Limpeza produtoLimpeza = new Limpeza(i, "Produto de Limpeza " + i, "Fabricante " + i, 100 + (i * 10));
-            caixa.colocarProdutoNoMonte(produtoLimpeza);
-        }
-
-        // Criando instâncias de Cuidados Pessoais (Cosméticos) e adicionando ao monte
-        for (int i = 0; i < quantidadeItens; i++) {
-            long validadeCosmetico = System.currentTimeMillis() + (i * 24 * 60 * 60 * 1000); // Exemplo de validade crescente
-            Cosmetico cosmetico = new Cosmetico(i + 20, "Cosmetico " + i, "Fabricante " + (i + 20), 50 + (i * 5),
-                    validadeCosmetico, "Fragrância " + i, (char) ('A' + (i % 4)));
-            caixa.colocarProdutoNoMonte(cosmetico);
-        }
-
-        // Criando instâncias de Higiene e adicionando ao monte
-        for (int i = 0; i < quantidadeItens; i++) {
-            long validadeHigiene = System.currentTimeMillis() + (i * 30 * 24 * 60 * 60 * 1000);
-            Higiene higiene = new Higiene(i + 40, "Higiene " + i, "Fabricante " + (i + 40), 70 + (i * 10), validadeHigiene,
-                    "Fragrância " + i);
-            caixa.colocarProdutoNoMonte(higiene);
-        }
-
-        // Criando instâncias de Papelaria e adicionando ao monte
-        for (int i = 0; i < quantidadeItens; i++) {
-            Papelaria papelaria = new Papelaria(i + 100, "Produto de Papelaria " + i, "Fabricante " + (i + 100), 200 + (i * 15));
-            caixa.colocarProdutoNoMonte(papelaria);
-        }
-
-        // Criando instâncias de Eletroeletrônicos e adicionando ao monte
-        for (int i = 0; i < quantidadeItens; i++) {
-            Eletroeletronico eletroeletronico = new Eletroeletronico(i + 80, "Eletroeletrônico " + i, "Fabricante " + (i + 80),
-                    300 + (i * 25), (short) (110 + (i % 20)));
-            caixa.colocarProdutoNoMonte(eletroeletronico);
-        }
-
-        // Criando instâncias de Produtos Alimentícios Não Perecíveis e adicionando ao monte
-        for (int i = 0; i < quantidadeItens; i++) {
-            long validadeNaoPerecivel = System.currentTimeMillis() + (i * 365 * 24 * 60 * 60 * 1000);
-            NaoPerecivel alimentoNaoPerecivel = new NaoPerecivel(i + 40, "Alimento Não Perecível " + i, "Fabricante " + (i + 40),
-                    150 + (i * 12), validadeNaoPerecivel, "Tipo de Armazenamento " + i);
-            caixa.colocarProdutoNoMonte(alimentoNaoPerecivel);
-        }
-
-        // Criando instâncias de Produtos Alimentícios Perecíveis e adicionando ao monte
-        for (int i = 0; i < quantidadeItens; i++) {
-            long validadePerecivel = System.currentTimeMillis() + (i * 15 * 24 * 60 * 60 * 1000);
-            Perecivel alimentoPerecivel = new Perecivel(i + 60, "Alimento Perecível " + i, "Fabricante " + (i + 60),
-                    200 + (i * 10), validadePerecivel);
-            caixa.colocarProdutoNoMonte(alimentoPerecivel);
-        }
-        if (proximoCaixa > 5) {
-            proximoCaixa = 1;
-        }
-        proximoCaixa++;
-    }
-
-    private void ensacolarProdutos(Caixa caixa, Fiscal fiscal, int proximoCaixa) {
+    private void ensacolarProdutos(Caixa caixa, Fiscal fiscal) {
         int numeroSacola = 1;
 
         caixa.contarProdutosNoMonte();
@@ -122,8 +58,11 @@ public class Empacotador {
                 if (numeroSacola > 5) {
                     numeroSacola = 1;
                 }
-                proximoCaixa++;
             }
+        }
+        proximoCaixa++;
+        if(proximoCaixa > 5){
+            proximoCaixa = 1;
         }
     }
 
@@ -135,9 +74,8 @@ public class Empacotador {
             if (!(refrigerado instanceof Refrigerado)) {
                 caixa.colocarProdutoNoMonte(refrigerado);
             }
-            if (calculoPeso(caixa, sacola, refrigerado) == true && verificaTemp(sacola) == true) {
+            if (calculoPeso(caixa, sacola, refrigerado) == true && verificaTemp(sacola) == true && sacola != null) {
                 fiscal.despachar(sacola);
-                caixa.reporSacolas();
             }
         }
     }
@@ -148,9 +86,8 @@ public class Empacotador {
             if (!(alimenticio instanceof Alimenticio || alimenticio instanceof Perecivel || alimenticio instanceof NaoPerecivel)) {
                 caixa.colocarProdutoNoMonte(alimenticio);
             }
-            if (calculoPeso(caixa, sacola, alimenticio) == true) {
+            if (calculoPeso(caixa, sacola, alimenticio) == true && sacola != null) {
                 fiscal.despachar(sacola);
-                caixa.reporSacolas();
             }
         }
     }
@@ -158,12 +95,13 @@ public class Empacotador {
     private void eletroPapelaria(Caixa caixa, Sacola sacola, Produto removido, Fiscal fiscal) {//Certo
         for (Produto produto : caixa.getArrayDoMonte()) {
             Produto eletronicoPapelaria = caixa.pegarProdutoDoMonte(produto);
-            if (!(eletronicoPapelaria instanceof Eletroeletronico || eletronicoPapelaria instanceof Papelaria)) {
+            if (!(eletronicoPapelaria instanceof Eletroeletronico || eletronicoPapelaria instanceof Papelaria ||
+                    eletronicoPapelaria instanceof CuidadosPessoais ||  eletronicoPapelaria instanceof Cosmetico ||
+                    eletronicoPapelaria instanceof Higiene)) {
                 caixa.colocarProdutoNoMonte(eletronicoPapelaria);
             }
-            if (calculoPeso(caixa, sacola, eletronicoPapelaria) == true) {
+            if (calculoPeso(caixa, sacola, eletronicoPapelaria) == true && sacola != null) {
                 fiscal.despachar(sacola);
-                caixa.reporSacolas();
             }
         }
     }
@@ -174,9 +112,8 @@ public class Empacotador {
             if (!(cuidadoPessoal instanceof CuidadosPessoais || cuidadoPessoal instanceof Cosmetico || cuidadoPessoal instanceof Higiene)) {
                 caixa.colocarProdutoNoMonte(cuidadoPessoal);
             }
-            if (calculoPeso(caixa, sacola, cuidadoPessoal) == true) {
+            if (calculoPeso(caixa, sacola, cuidadoPessoal) == true && sacola != null) {
                 fiscal.despachar(sacola);
-                caixa.reporSacolas();
             }
         }
     }
@@ -187,9 +124,8 @@ public class Empacotador {
             if (!(limpeza instanceof Limpeza)) {
                 caixa.colocarProdutoNoMonte(limpeza);
             }
-            if (calculoPeso(caixa, sacola, limpeza) == true) {
+            if (calculoPeso(caixa, sacola, limpeza) == true && sacola != null) {
                 fiscal.despachar(sacola);
-                caixa.reporSacolas();
             }
         }
     }
