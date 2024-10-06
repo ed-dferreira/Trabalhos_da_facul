@@ -11,38 +11,37 @@ public class Empacotador {
 
     public void agir(Caixa caixa, Fiscal fiscal) {
         int numeroSacola = 1;
+        Sacola sacolaAtual = caixa.getSacola(numeroSacola);
 
-        if (caixa.contarProdutosNoMonte() > 0) {
-            Sacola sacolaAtual = caixa.getSacola(numeroSacola);
-
-            for (Produto produto : caixa.getArrayDoMonte()) {
-                Produto item = caixa.pegarProdutoDoMonte(produto);
-                if (item instanceof Refrigerado) {
-                    processarRefrigerado(item, caixa, fiscal);
-                } else if (item instanceof Alimenticio || item instanceof Perecivel || item instanceof NaoPerecivel) {
-                    processarAlimenticio(item, caixa, fiscal);
-                } else if (item instanceof CuidadosPessoais || item instanceof Cosmetico || item instanceof Higiene) {
-                    processarCuidadosPessoais(item, caixa, fiscal);
-                } else if (item instanceof Eletroeletronico || item instanceof Papelaria) {
-                    processarEletroPapelaria(item, caixa, fiscal);
-                } else if (item instanceof Limpeza) {
-                    processarLimpeza(item, caixa, fiscal);
-                }
-                caixa.reporSacolas();
-                // Se a sacola estiver cheia, passa para a próxima
-                if (!pesoCorreto(sacolaAtual)) {
-                    numeroSacola++;
-                    if (numeroSacola > 5) {
-                        numeroSacola = 1;
-                    }
-                    proximoCaixa++;
-                    if (proximoCaixa > 5) {
-                        proximoCaixa = 1;
-                    }
-                    return; // Finaliza a rodada para o próximo caixa e sacola
-                }
-                sacolaAtual = caixa.getSacola(numeroSacola); // Pega nova sacola
+        for (Produto produto : caixa.getArrayDoMonte()) {
+            Produto item = caixa.pegarProdutoDoMonte(produto);
+            if (item instanceof Refrigerado) {
+                processarRefrigerado(item, caixa, fiscal);
+            } else if (item instanceof Alimenticio || item instanceof Perecivel || item instanceof NaoPerecivel) {
+                processarAlimenticio(item, caixa, fiscal);
+            } else if (item instanceof CuidadosPessoais || item instanceof Cosmetico || item instanceof Higiene) {
+                processarCuidadosPessoais(item, caixa, fiscal);
+            } else if (item instanceof Eletroeletronico || item instanceof Papelaria) {
+                processarEletroPapelaria(item, caixa, fiscal);
+            } else if (item instanceof Limpeza) {
+                processarLimpeza(item, caixa, fiscal);
             }
+            if (caixa.contarProdutosNoMonte() == 0) {
+                proximoCaixa++;
+                if (proximoCaixa > 5) {
+                    proximoCaixa = 1;
+                }
+            }
+            caixa.reporSacolas();
+
+            if (!pesoCorreto(sacolaAtual)) {
+                numeroSacola++;
+                if (numeroSacola > 5) {
+                    numeroSacola = 1;
+                }
+                return; // Finaliza a rodada para o próximo caixa e sacola
+            }
+            sacolaAtual = caixa.getSacola(numeroSacola); // Pega nova sacola
         }
     }
 
