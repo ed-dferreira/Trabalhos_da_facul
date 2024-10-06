@@ -1,52 +1,45 @@
 package estudantes.entidades;
 
-import professor.entidades.Fiscal;
 import professor.entidades.Caixa;
+import professor.entidades.Fiscal;
 import professor.entidades.Sacola;
 
 public class Empacotador {
     public int proximoCaixa = 1;
+    public Sacola sacolaAtual;
 
     public void agir(Caixa caixa, Fiscal fiscal) {
-        for (int e = 0; e < 100; e++){
-            int numeroSacola = 1;
-            if (caixa.contarProdutosNoMonte() > 0) {
-                if (proximoCaixa == 5) {
-                    proximoCaixa = 1;
-                }
-                proximoCaixa++;
-                Sacola sacolaAtual = caixa.getSacola(numeroSacola);
-                for (Produto produto : caixa.getArrayDoMonte()) {
-                    Produto item = caixa.pegarProdutoDoMonte(produto);
+        int numeroSacola = 1;
+        if (caixa.contarProdutosNoMonte() > 0) {
+            sacolaAtual = caixa.getSacola(numeroSacola);
+            for (Produto produto : caixa.getArrayDoMonte()) {
+                Produto item = caixa.pegarProdutoDoMonte(produto);
 
-                    if (item instanceof Refrigerado) {
-                        processarRefrigerado(item, caixa, fiscal);
-                    } else if (item instanceof Alimenticio || item instanceof Perecivel || item instanceof NaoPerecivel) {
-                        processarAlimenticio(item, caixa, fiscal);
-                    } else if (item instanceof Eletroeletronico || item instanceof Papelaria ||
-                            item instanceof CuidadosPessoais || item instanceof Cosmetico ||
-                            item instanceof Higiene) {
-                        processarEletroPapelariaCuidadosPessoais(item, caixa, fiscal);
-                    } else if (item instanceof Limpeza) {
-                        processarLimpeza(item, caixa, fiscal);
-                    } else {
-                        // Se o produto não se encaixa em nenhuma das categorias
-                        caixa.colocarProdutoNoMonte(item);
-                    }
+                if (item instanceof Refrigerado) {
+                    numeroSacola = processarRefrigerado(item, caixa, fiscal, numeroSacola);
+                } else if (item instanceof Alimenticio || item instanceof Perecivel || item instanceof NaoPerecivel) {
+                    numeroSacola = processarAlimenticio(item, caixa, fiscal, numeroSacola);
+                } else if (item instanceof CuidadosPessoais || item instanceof Cosmetico ||
+                         item instanceof Higiene) {
+                    numeroSacola = processarCuidadosPessoais(item, caixa, fiscal, numeroSacola);
+                }else if (item instanceof Eletroeletronico || item instanceof Papelaria){
+                    numeroSacola = processarEletroPapelaria(item, caixa, fiscal, numeroSacola);
+                } else if (item instanceof Limpeza) {
+                    numeroSacola = processarLimpeza(item, caixa, fiscal, numeroSacola);
                 }
                 if (numeroSacola > 5) {
                     numeroSacola = 1;
                 }
-                numeroSacola++;
-            } else {
-                if (proximoCaixa > 5) {
-                    proximoCaixa = 1;
-                }
-                proximoCaixa++;
+            }
+        } else {
+            proximoCaixa++;
+            if (proximoCaixa > 5) {
+                proximoCaixa = 1;
             }
         }
     }
-    private void processarRefrigerado(Produto produto, Caixa caixa, Fiscal fiscal) {
+
+    private int processarRefrigerado(Produto produto, Caixa caixa, Fiscal fiscal, int numeroSacola) {
         Sacola sacola = caixa.getSacola(1);
         ajustarPesoESacola(produto, sacola);
 
@@ -54,49 +47,68 @@ public class Empacotador {
 
         if (pesoCorreto(sacola) && tempOk && (sacola != null)) {
             fiscal.despachar(sacola);
+            numeroSacola++;
         }
+        return numeroSacola;
     }
 
-    private void processarAlimenticio(Produto produto, Caixa caixa, Fiscal fiscal) {
+    private int processarAlimenticio(Produto produto, Caixa caixa, Fiscal fiscal, int numeroSacola){
         Sacola sacola = caixa.getSacola(2);
         ajustarPesoESacola(produto, sacola);
 
         if (pesoCorreto(sacola) && (sacola != null)) {
             fiscal.despachar(sacola);
+            numeroSacola++;
         }
+        return numeroSacola;
     }
 
-    private void processarEletroPapelariaCuidadosPessoais(Produto produto, Caixa caixa, Fiscal fiscal) {
+    private int processarCuidadosPessoais(Produto produto, Caixa caixa, Fiscal fiscal, int numeroSacola){
         Sacola sacola = caixa.getSacola(3);
         ajustarPesoESacola(produto, sacola);
 
         if (pesoCorreto(sacola) && (sacola != null)) {
             fiscal.despachar(sacola);
+            numeroSacola++;
         }
+        return numeroSacola;
     }
 
-    private void processarLimpeza(Produto produto, Caixa caixa, Fiscal fiscal) {
+    private int processarEletroPapelaria(Produto produto, Caixa caixa, Fiscal fiscal, int numeroSacola){
         Sacola sacola = caixa.getSacola(4);
         ajustarPesoESacola(produto, sacola);
 
         if (pesoCorreto(sacola) && (sacola != null)) {
             fiscal.despachar(sacola);
+            numeroSacola++;
         }
+        return numeroSacola;
+    }
+
+    private int processarLimpeza(Produto produto, Caixa caixa, Fiscal fiscal, int numeroSacola){
+        Sacola sacola = caixa.getSacola(5);
+        ajustarPesoESacola(produto, sacola);
+
+        if (pesoCorreto(sacola) && (sacola != null)) {
+            fiscal.despachar(sacola);
+            numeroSacola++;
+        }
+        return numeroSacola;
     }
 
     private void ajustarPesoESacola(Produto produto, Sacola sacola) {
         int pesoTotal = calcularPesoTotal(sacola);
 
         // Enquanto a sacola estiver acima do peso
-        while (pesoTotal >= 5000) {
+        if (pesoTotal >= 5000) {
             sacola.pegarProdutoDaSacola(produto);
-            pesoTotal = calcularPesoTotal(sacola);
-        }
+            //pesoTotal = calcularPesoTotal(sacola);
 
-        // Enquanto a sacola estiver abaixo do peso
-        while (pesoTotal < 1000) {
+
+            // Enquanto a sacola estiver abaixo do peso
+        } else if (pesoTotal < 1000) {
             sacola.colocarProdutoNaSacola(produto);
-            pesoTotal = calcularPesoTotal(sacola);
+            //pesoTotal = calcularPesoTotal(sacola);
         }
     }
 
