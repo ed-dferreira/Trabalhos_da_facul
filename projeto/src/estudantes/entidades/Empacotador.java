@@ -28,9 +28,11 @@ public class Empacotador {
                     processarLimpeza(item, caixa, fiscal);
                 }
                 if (caixa.contarProdutosNoMonte() == 0) {
-                    caixa.reporSacolas();
-                }
-                if (caixa.contarProdutosNoMonte() == 0) {
+                    caixa.despacharSacola(1);
+                    caixa.despacharSacola(2);
+                    caixa.despacharSacola(3);
+                    caixa.despacharSacola(4);
+                    caixa.despacharSacola(5);
                     proximoCaixa++;
                     if (proximoCaixa == 6) {
                         proximoCaixa = 1;
