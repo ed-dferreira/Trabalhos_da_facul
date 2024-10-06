@@ -201,6 +201,5 @@ public class Supermercado {
         if(tempo >= 120000){
             Simulador.pararSimulacao();
         }
-        
     }
 }

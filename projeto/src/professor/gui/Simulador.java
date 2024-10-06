@@ -28,6 +28,10 @@ public class Simulador extends javax.swing.JFrame {
      */
     public void simular(){
         supermercado.simularSupermercado();
+        System.out.println("Advertencis: " + Supermercado.getAdvertencias());
+        System.out.println("Rasgadas: " + Supermercado.getSacolasRasgadas());
+        System.out.println("Regras Quebradas: " + Supermercado.getRegrasQuebradas());
+        System.out.println("sacolas despachadas: " + supermercado.getFiscal().contarSacolasDespachadas());
     }
     
     /**
