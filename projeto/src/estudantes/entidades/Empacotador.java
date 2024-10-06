@@ -13,83 +13,89 @@ public class Empacotador {
         int numeroSacola = 1;
 
         if (caixa.contarProdutosNoMonte() > 0) {
+            Sacola sacolaAtual = caixa.getSacola(numeroSacola);
+
             for (Produto produto : caixa.getArrayDoMonte()) {
-                Sacola sacolaAtual = caixa.getSacola(numeroSacola);
                 Produto item = caixa.pegarProdutoDoMonte(produto);
                 if (item instanceof Refrigerado) {
-                    processarRefrigerado(item, caixa, fiscal, sacolaAtual);
-                    numeroSacola++;
+                    processarRefrigerado(item, caixa, fiscal);
                 } else if (item instanceof Alimenticio || item instanceof Perecivel || item instanceof NaoPerecivel) {
-                    processarAlimenticio(item, caixa, fiscal, sacolaAtual);
-                    numeroSacola++;
+                    processarAlimenticio(item, caixa, fiscal);
                 } else if (item instanceof CuidadosPessoais || item instanceof Cosmetico || item instanceof Higiene) {
-                    processarCuidadosPessoais(item, caixa, fiscal, sacolaAtual);
-                    numeroSacola++;
+                    processarCuidadosPessoais(item, caixa, fiscal);
                 } else if (item instanceof Eletroeletronico || item instanceof Papelaria) {
-                    processarEletroPapelaria(item, caixa, fiscal, sacolaAtual);
-                    numeroSacola++;
+                    processarEletroPapelaria(item, caixa, fiscal);
                 } else if (item instanceof Limpeza) {
-                    processarLimpeza(item, caixa, fiscal, sacolaAtual);
+                    processarLimpeza(item, caixa, fiscal);
+                }
+                caixa.reporSacolas();
+                // Se a sacola estiver cheia, passa para a próxima
+                if (!pesoCorreto(sacolaAtual)) {
                     numeroSacola++;
+                    if (numeroSacola > 5) {
+                        numeroSacola = 1;
+                    }
+                    proximoCaixa++;
+                    if (proximoCaixa > 5) {
+                        proximoCaixa = 1;
+                    }
+                    return; // Finaliza a rodada para o próximo caixa e sacola
                 }
-                if (numeroSacola == 5){
-                    numeroSacola = 1;
-                }
-
+                sacolaAtual = caixa.getSacola(numeroSacola); // Pega nova sacola
             }
         }
     }
 
 
-    private void processarRefrigerado(Produto item, Caixa caixa, Fiscal fiscal, Sacola sacolaAtual) {
-        ajustarPesoESacola(item, sacolaAtual);
+    private void processarRefrigerado(Produto produto, Caixa caixa, Fiscal fiscal) {
+        Sacola sacola = caixa.getSacola(1);
+        ajustarPesoESacola(produto, sacola);
 
-        boolean tempOk = verificarTemperaturaSacola(sacolaAtual);
+        boolean tempOk = verificarTemperaturaSacola(sacola);
 
-        if (sacolaAtual != null && pesoCorreto(sacolaAtual) && tempOk) {
-            fiscal.despachar(sacolaAtual);
-            caixa.reporSacolas();
+        if (sacola != null && pesoCorreto(sacola) && tempOk) {
+            caixa.despacharSacola(1);
+            fiscal.despachar(sacola);
         }
     }
 
-    private void processarAlimenticio(Produto item, Caixa caixa, Fiscal fiscal, Sacola sacolaAtual) {
+    private void processarAlimenticio(Produto produto, Caixa caixa, Fiscal fiscal) {
+        Sacola sacola = caixa.getSacola(2);
+        ajustarPesoESacola(produto, sacola);
 
-        ajustarPesoESacola(item, sacolaAtual);
-
-        if (sacolaAtual != null && pesoCorreto(sacolaAtual)) {
-            fiscal.despachar(sacolaAtual);
-            caixa.reporSacolas();
+        if (sacola != null && pesoCorreto(sacola)) {
+            caixa.despacharSacola(2);
+            fiscal.despachar(sacola);
         }
     }
 
-    private void processarCuidadosPessoais(Produto item, Caixa caixa, Fiscal fiscal, Sacola sacolaAtual) {
+    private void processarCuidadosPessoais(Produto produto, Caixa caixa, Fiscal fiscal) {
+        Sacola sacola = caixa.getSacola(3);
+        ajustarPesoESacola(produto, sacola);
 
-        ajustarPesoESacola(item, sacolaAtual);
-
-        if (sacolaAtual != null && pesoCorreto(sacolaAtual)) {
-            fiscal.despachar(sacolaAtual);
-            caixa.reporSacolas();
+        if (sacola != null && pesoCorreto(sacola)) {
+            caixa.despacharSacola(3);
+            fiscal.despachar(sacola);
         }
     }
 
-    private void processarEletroPapelaria(Produto item, Caixa caixa, Fiscal fiscal, Sacola sacolaAtual) {
+    private void processarEletroPapelaria(Produto produto, Caixa caixa, Fiscal fiscal) {
+        Sacola sacola = caixa.getSacola(4);
+        ajustarPesoESacola(produto, sacola);
 
-        ajustarPesoESacola(item, sacolaAtual);
-
-        if (sacolaAtual != null && pesoCorreto(sacolaAtual)) {
-            fiscal.despachar(sacolaAtual);
-            caixa.reporSacolas();
+        if (sacola != null && pesoCorreto(sacola)) {
+            caixa.despacharSacola(4);
+            fiscal.despachar(sacola);
         }
     }
 
-    private void processarLimpeza(Produto item, Caixa caixa, Fiscal fiscal, Sacola sacolaAtual) {
+    private void processarLimpeza(Produto produto, Caixa caixa, Fiscal fiscal) {
+        Sacola sacola = caixa.getSacola(5);
+        ajustarPesoESacola(produto, sacola);
 
-        ajustarPesoESacola(item, sacolaAtual);
-
-        if (sacolaAtual != null && pesoCorreto(sacolaAtual)) {
-            //caixa.despacharSacola(sacolaAtual);
-            fiscal.despachar(sacolaAtual);
-            caixa.reporSacolas();
+        if (sacola != null && pesoCorreto(sacola)) {
+            caixa.despacharSacola(5);
+            fiscal.despachar(sacola);
         }
     }
 
@@ -135,49 +141,3 @@ public class Empacotador {
         return true;
     }
 }
-
-
-/*
-                    if (item instanceof Refrigerado) {
-                        sacolaAtual.colocarProdutoNaSacola(item);
-                        ajustarPesoESacola(item, sacolaAtual);
-                        boolean tempOk = verificarTemperaturaSacola(sacolaAtual);
-                        if (sacolaAtual != null && pesoCorreto(sacolaAtual) && tempOk) {
-                            caixa.despacharSacola(1);
-                            fiscal.despachar(sacolaAtual);
-                            caixa.reporSacolas();
-                        }
-                    } else if (item instanceof Alimenticio || item instanceof Perecivel || item instanceof NaoPerecivel) {
-                        sacolaAtual.colocarProdutoNaSacola(item);
-                        ajustarPesoESacola(item, sacolaAtual);
-                        if (sacolaAtual != null && pesoCorreto(sacolaAtual)) {
-                            caixa.despacharSacola(1);
-                            fiscal.despachar(sacolaAtual);
-                            caixa.reporSacolas();
-                        }
-                    } else if (item instanceof CuidadosPessoais || item instanceof Cosmetico || item instanceof Higiene) {
-                        sacolaAtual.colocarProdutoNaSacola(item);
-                        ajustarPesoESacola(item, sacolaAtual);
-                        if (sacolaAtual != null && pesoCorreto(sacolaAtual)) {
-                            caixa.despacharSacola(1);
-                            fiscal.despachar(sacolaAtual);
-                            caixa.reporSacolas();
-                        }
-                    } else if (item instanceof Eletroeletronico || item instanceof Papelaria) {
-                        sacolaAtual.colocarProdutoNaSacola(item);
-                        ajustarPesoESacola(item, sacolaAtual);
-                        if (sacolaAtual != null && pesoCorreto(sacolaAtual)) {
-                            caixa.despacharSacola(1);
-                            fiscal.despachar(sacolaAtual);
-                            caixa.reporSacolas();
-                        }
-                    } else if (item instanceof Limpeza) {
-                        sacolaAtual.colocarProdutoNaSacola(item);
-                        ajustarPesoESacola(item, sacolaAtual);
-                        if (sacolaAtual != null && pesoCorreto(sacolaAtual)) {
-                            caixa.despacharSacola(1);
-                            fiscal.despachar(sacolaAtual);
-                            caixa.reporSacolas();
-                        }
-                    }
- */
