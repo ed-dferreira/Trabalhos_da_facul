@@ -202,4 +202,4 @@ public class Supermercado {
             Simulador.pararSimulacao();
         }
     }
-}
+}//120000){
