@@ -4,111 +4,104 @@ import professor.entidades.Caixa;
 import professor.entidades.Fiscal;
 import professor.entidades.Sacola;
 
+import java.util.Enumeration;
+
 public class Empacotador {
     public int proximoCaixa = 1;
-    public Sacola sacolaAtual;
 
     public void agir(Caixa caixa, Fiscal fiscal) {
         int numeroSacola = 1;
-        if (caixa.contarProdutosNoMonte() > 0) {
-            sacolaAtual = caixa.getSacola(numeroSacola);
-            for (Produto produto : caixa.getArrayDoMonte()) {
-                Produto item = caixa.pegarProdutoDoMonte(produto);
 
+        if (caixa.contarProdutosNoMonte() > 0) {
+            for (Produto produto : caixa.getArrayDoMonte()) {
+                Sacola sacolaAtual = caixa.getSacola(numeroSacola);
+                Produto item = caixa.pegarProdutoDoMonte(produto);
                 if (item instanceof Refrigerado) {
-                    numeroSacola = processarRefrigerado(item, caixa, fiscal, numeroSacola);
+                    processarRefrigerado(item, caixa, fiscal, sacolaAtual);
+                    numeroSacola++;
                 } else if (item instanceof Alimenticio || item instanceof Perecivel || item instanceof NaoPerecivel) {
-                    numeroSacola = processarAlimenticio(item, caixa, fiscal, numeroSacola);
-                } else if (item instanceof CuidadosPessoais || item instanceof Cosmetico ||
-                         item instanceof Higiene) {
-                    numeroSacola = processarCuidadosPessoais(item, caixa, fiscal, numeroSacola);
-                }else if (item instanceof Eletroeletronico || item instanceof Papelaria){
-                    numeroSacola = processarEletroPapelaria(item, caixa, fiscal, numeroSacola);
+                    processarAlimenticio(item, caixa, fiscal, sacolaAtual);
+                    numeroSacola++;
+                } else if (item instanceof CuidadosPessoais || item instanceof Cosmetico || item instanceof Higiene) {
+                    processarCuidadosPessoais(item, caixa, fiscal, sacolaAtual);
+                    numeroSacola++;
+                } else if (item instanceof Eletroeletronico || item instanceof Papelaria) {
+                    processarEletroPapelaria(item, caixa, fiscal, sacolaAtual);
+                    numeroSacola++;
                 } else if (item instanceof Limpeza) {
-                    numeroSacola = processarLimpeza(item, caixa, fiscal, numeroSacola);
+                    processarLimpeza(item, caixa, fiscal, sacolaAtual);
+                    numeroSacola++;
                 }
-                if (numeroSacola > 5) {
+                if (numeroSacola == 5){
                     numeroSacola = 1;
                 }
-            }
-        } else {
-            proximoCaixa++;
-            if (proximoCaixa > 5) {
-                proximoCaixa = 1;
+
             }
         }
     }
 
-    private int processarRefrigerado(Produto produto, Caixa caixa, Fiscal fiscal, int numeroSacola) {
-        Sacola sacola = caixa.getSacola(1);
-        ajustarPesoESacola(produto, sacola);
 
-        boolean tempOk = verificarTemperaturaSacola(sacola);
+    private void processarRefrigerado(Produto item, Caixa caixa, Fiscal fiscal, Sacola sacolaAtual) {
+        ajustarPesoESacola(item, sacolaAtual);
 
-        if (pesoCorreto(sacola) && tempOk && (sacola != null)) {
-            fiscal.despachar(sacola);
-            numeroSacola++;
+        boolean tempOk = verificarTemperaturaSacola(sacolaAtual);
+
+        if (sacolaAtual != null && pesoCorreto(sacolaAtual) && tempOk) {
+            fiscal.despachar(sacolaAtual);
+            caixa.reporSacolas();
         }
-        return numeroSacola;
     }
 
-    private int processarAlimenticio(Produto produto, Caixa caixa, Fiscal fiscal, int numeroSacola){
-        Sacola sacola = caixa.getSacola(2);
-        ajustarPesoESacola(produto, sacola);
+    private void processarAlimenticio(Produto item, Caixa caixa, Fiscal fiscal, Sacola sacolaAtual) {
 
-        if (pesoCorreto(sacola) && (sacola != null)) {
-            fiscal.despachar(sacola);
-            numeroSacola++;
+        ajustarPesoESacola(item, sacolaAtual);
+
+        if (sacolaAtual != null && pesoCorreto(sacolaAtual)) {
+            fiscal.despachar(sacolaAtual);
+            caixa.reporSacolas();
         }
-        return numeroSacola;
     }
 
-    private int processarCuidadosPessoais(Produto produto, Caixa caixa, Fiscal fiscal, int numeroSacola){
-        Sacola sacola = caixa.getSacola(3);
-        ajustarPesoESacola(produto, sacola);
+    private void processarCuidadosPessoais(Produto item, Caixa caixa, Fiscal fiscal, Sacola sacolaAtual) {
 
-        if (pesoCorreto(sacola) && (sacola != null)) {
-            fiscal.despachar(sacola);
-            numeroSacola++;
+        ajustarPesoESacola(item, sacolaAtual);
+
+        if (sacolaAtual != null && pesoCorreto(sacolaAtual)) {
+            fiscal.despachar(sacolaAtual);
+            caixa.reporSacolas();
         }
-        return numeroSacola;
     }
 
-    private int processarEletroPapelaria(Produto produto, Caixa caixa, Fiscal fiscal, int numeroSacola){
-        Sacola sacola = caixa.getSacola(4);
-        ajustarPesoESacola(produto, sacola);
+    private void processarEletroPapelaria(Produto item, Caixa caixa, Fiscal fiscal, Sacola sacolaAtual) {
 
-        if (pesoCorreto(sacola) && (sacola != null)) {
-            fiscal.despachar(sacola);
-            numeroSacola++;
+        ajustarPesoESacola(item, sacolaAtual);
+
+        if (sacolaAtual != null && pesoCorreto(sacolaAtual)) {
+            fiscal.despachar(sacolaAtual);
+            caixa.reporSacolas();
         }
-        return numeroSacola;
     }
 
-    private int processarLimpeza(Produto produto, Caixa caixa, Fiscal fiscal, int numeroSacola){
-        Sacola sacola = caixa.getSacola(5);
-        ajustarPesoESacola(produto, sacola);
+    private void processarLimpeza(Produto item, Caixa caixa, Fiscal fiscal, Sacola sacolaAtual) {
 
-        if (pesoCorreto(sacola) && (sacola != null)) {
-            fiscal.despachar(sacola);
-            numeroSacola++;
+        ajustarPesoESacola(item, sacolaAtual);
+
+        if (sacolaAtual != null && pesoCorreto(sacolaAtual)) {
+            //caixa.despacharSacola(sacolaAtual);
+            fiscal.despachar(sacolaAtual);
+            caixa.reporSacolas();
         }
-        return numeroSacola;
     }
 
     private void ajustarPesoESacola(Produto produto, Sacola sacola) {
         int pesoTotal = calcularPesoTotal(sacola);
 
-        // Enquanto a sacola estiver acima do peso
+        // Se a sacola estiver acima do peso
         if (pesoTotal >= 5000) {
             sacola.pegarProdutoDaSacola(produto);
-            //pesoTotal = calcularPesoTotal(sacola);
-
-
-            // Enquanto a sacola estiver abaixo do peso
         } else if (pesoTotal < 1000) {
+            // Se a sacola estiver abaixo do peso
             sacola.colocarProdutoNaSacola(produto);
-            //pesoTotal = calcularPesoTotal(sacola);
         }
     }
 
@@ -142,3 +135,49 @@ public class Empacotador {
         return true;
     }
 }
+
+
+/*
+                    if (item instanceof Refrigerado) {
+                        sacolaAtual.colocarProdutoNaSacola(item);
+                        ajustarPesoESacola(item, sacolaAtual);
+                        boolean tempOk = verificarTemperaturaSacola(sacolaAtual);
+                        if (sacolaAtual != null && pesoCorreto(sacolaAtual) && tempOk) {
+                            caixa.despacharSacola(1);
+                            fiscal.despachar(sacolaAtual);
+                            caixa.reporSacolas();
+                        }
+                    } else if (item instanceof Alimenticio || item instanceof Perecivel || item instanceof NaoPerecivel) {
+                        sacolaAtual.colocarProdutoNaSacola(item);
+                        ajustarPesoESacola(item, sacolaAtual);
+                        if (sacolaAtual != null && pesoCorreto(sacolaAtual)) {
+                            caixa.despacharSacola(1);
+                            fiscal.despachar(sacolaAtual);
+                            caixa.reporSacolas();
+                        }
+                    } else if (item instanceof CuidadosPessoais || item instanceof Cosmetico || item instanceof Higiene) {
+                        sacolaAtual.colocarProdutoNaSacola(item);
+                        ajustarPesoESacola(item, sacolaAtual);
+                        if (sacolaAtual != null && pesoCorreto(sacolaAtual)) {
+                            caixa.despacharSacola(1);
+                            fiscal.despachar(sacolaAtual);
+                            caixa.reporSacolas();
+                        }
+                    } else if (item instanceof Eletroeletronico || item instanceof Papelaria) {
+                        sacolaAtual.colocarProdutoNaSacola(item);
+                        ajustarPesoESacola(item, sacolaAtual);
+                        if (sacolaAtual != null && pesoCorreto(sacolaAtual)) {
+                            caixa.despacharSacola(1);
+                            fiscal.despachar(sacolaAtual);
+                            caixa.reporSacolas();
+                        }
+                    } else if (item instanceof Limpeza) {
+                        sacolaAtual.colocarProdutoNaSacola(item);
+                        ajustarPesoESacola(item, sacolaAtual);
+                        if (sacolaAtual != null && pesoCorreto(sacolaAtual)) {
+                            caixa.despacharSacola(1);
+                            fiscal.despachar(sacolaAtual);
+                            caixa.reporSacolas();
+                        }
+                    }
+ */
