@@ -1,6 +1,6 @@
 package pegaPrea;
 
-import Entidades.Jogador;
+import Entidades.JogadorAzul;
 
 import javax.swing.*;
 import java.awt.*;
@@ -15,14 +15,11 @@ public class TelaDoJogo extends JPanel implements Runnable {
     final int screenWidth = maxScreenCol * tileSize; // 960
     final int screenHeight = maxScreenRow * tileSize; // 576
 
-    int playerX = 100;
-    int playerY = 100;
-    int playerSpeed = 4;
     int fps = 144;
 
     KeyHandler keyH = new KeyHandler();
     Thread gameThread; // mantem o programa funcionando
-    Jogador jogador = new Jogador(this, keyH);
+    JogadorAzul jogadorAzul = new JogadorAzul(this, keyH);
 
     public TelaDoJogo() {
         this.setPreferredSize(new Dimension(screenWidth, screenHeight));
@@ -68,13 +65,13 @@ public class TelaDoJogo extends JPanel implements Runnable {
     }
 
     public void update(){
-        jogador.update();
+        jogadorAzul.update();
     }
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D) g;
 
-        jogador.draw(g2);
+        jogadorAzul.draw(g2);
 
         g2.dispose();
     }
