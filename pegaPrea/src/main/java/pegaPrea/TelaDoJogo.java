@@ -13,8 +13,8 @@ public class TelaDoJogo extends JPanel implements Runnable {
     final int originTileSize = 16; // 16x16
     final int scale = 3;
     public final int tileSize = originTileSize * scale; // 48x48
-    final int maxScreenCol = 20;
-    final int maxScreenRow = 12;
+    public final int maxScreenCol = 20;
+    public final int maxScreenRow = 12;
     final int screenWidth = maxScreenCol * tileSize; // 960
     final int screenHeight = maxScreenRow * tileSize; // 576
 
