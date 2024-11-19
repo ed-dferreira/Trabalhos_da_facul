@@ -1,7 +1,5 @@
 package pegaPrea;
 
-import org.example.TelaJogo;
-
 import javax.swing.*;
 
 public class Main {

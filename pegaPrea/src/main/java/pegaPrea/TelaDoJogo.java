@@ -1,9 +1,12 @@
 package pegaPrea;
 
+import Ambiente.Ambiente;
+import Ambiente.ControleAmbiente;
 import Entidades.JogadorAzul;
 
 import javax.swing.*;
 import java.awt.*;
+
 
 public class TelaDoJogo extends JPanel implements Runnable {
     // configurações da tela
@@ -16,6 +19,8 @@ public class TelaDoJogo extends JPanel implements Runnable {
     final int screenHeight = maxScreenRow * tileSize; // 576
 
     int fps = 144;
+
+    ControleAmbiente ambiente = new ControleAmbiente(this);
 
     KeyHandler keyH = new KeyHandler();
     Thread gameThread; // mantem o programa funcionando
@@ -70,6 +75,8 @@ public class TelaDoJogo extends JPanel implements Runnable {
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D) g;
+
+        ambiente.draw(g2);
 
         jogadorAzul.draw(g2);
 
