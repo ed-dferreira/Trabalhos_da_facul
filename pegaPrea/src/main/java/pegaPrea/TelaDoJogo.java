@@ -1,6 +1,5 @@
 package pegaPrea;
 
-import Ambiente.Ambiente;
 import Ambiente.ControleAmbiente;
 import Entidades.JogadorAzul;
 
@@ -20,10 +19,11 @@ public class TelaDoJogo extends JPanel implements Runnable {
 
     int fps = 144;
 
-    ControleAmbiente ambiente = new ControleAmbiente(this);
+    ControleAmbiente controleAmbiente = new ControleAmbiente(this);
 
     KeyHandler keyH = new KeyHandler();
     Thread gameThread; // mantem o programa funcionando
+    public ChecaColisao checaColisao = new ChecaColisao(this);
     JogadorAzul jogadorAzul = new JogadorAzul(this, keyH);
 
     public TelaDoJogo() {
@@ -76,7 +76,7 @@ public class TelaDoJogo extends JPanel implements Runnable {
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D) g;
 
-        ambiente.draw(g2);
+        controleAmbiente.draw(g2);
 
         jogadorAzul.draw(g2);
 

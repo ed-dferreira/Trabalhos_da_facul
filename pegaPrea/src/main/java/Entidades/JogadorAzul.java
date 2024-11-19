@@ -14,14 +14,17 @@ public class JogadorAzul extends Entidade {
     public JogadorAzul(TelaDoJogo gp, KeyHandler keyH) {
         this.gp = gp;
         this.keyH = keyH;
+
+        colisaoEntidade = new Rectangle(8, 16, 32, 32);
+
         this.valoresPadrao();
         getPlayerImage();
     }
 
     // 7:30 3
     public void valoresPadrao() {
-        x = 100;
-        y = 100;
+        entidadeX = 300; // local onde aparece o boneco
+        entidadeY = 70; // local onde aparece o boneco
         speed = 2;
         direction = "down";
     }
@@ -46,16 +49,24 @@ public class JogadorAzul extends Entidade {
         if (keyH.upPressed || keyH.downPressed || keyH.leftPressed || keyH.rightPressed) {
             if (keyH.upPressed) {
                 direction = "up";
-                y -= speed;
             } else if (keyH.downPressed) {
                 direction = "down";
-                y += speed;
             } else if (keyH.leftPressed) {
                 direction = "left";
-                x -= speed;
             } else if (keyH.rightPressed) {
                 direction = "right";
-                x += speed;
+            }
+
+            // Checar colisão
+            collisionOn = false;
+            gp.checaColisao.checarPiso(this); //aqui
+            if (collisionOn == false) {
+                switch (direction) {
+                    case "up": entidadeY -= speed; break;
+                    case "down": entidadeY += speed; break;
+                    case "left": entidadeX -= speed; break;
+                    case "Right": entidadeX += speed; break;
+                }
             }
 
             spriteCounter++;
@@ -71,39 +82,39 @@ public class JogadorAzul extends Entidade {
         BufferedImage image = null;
         switch (direction) {
             case "up":
-                if (spritNum == 1){
+                if (spritNum == 1) {
                     image = up1;
                 }
-                if (spritNum == 2){
+                if (spritNum == 2) {
                     image = up2;
                 }
                 break;
             case "down":
-                if (spritNum == 1){
+                if (spritNum == 1) {
                     image = down1;
                 }
-                if (spritNum == 2){
+                if (spritNum == 2) {
                     image = down2;
                 }
                 break;
             case "left":
-                if (spritNum == 1){
+                if (spritNum == 1) {
                     image = left1;
                 }
-                if (spritNum == 2){
+                if (spritNum == 2) {
                     image = left2;
                 }
                 break;
             case "right":
-                if (spritNum == 1){
+                if (spritNum == 1) {
                     image = right1;
                 }
-                if (spritNum == 2){
+                if (spritNum == 2) {
                     image = right2;
                 }
                 break;
             default:
         }
-        g2.drawImage(image, x, y, gp.tileSize, gp.tileSize, null);
+        g2.drawImage(image, entidadeX, entidadeY, gp.tileSize, gp.tileSize, null);
     }
 }

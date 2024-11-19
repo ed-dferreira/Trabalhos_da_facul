@@ -17,8 +17,8 @@ public class JogadorRosa extends Entidade {
     }
     // 7:30 3
     public void valoresPadrao() {
-        x = 100;
-        y = 100;
+        entidadeX = 100;
+        entidadeY = 100;
         speed = 2;
     }
 
@@ -41,18 +41,18 @@ public class JogadorRosa extends Entidade {
 
     public void update() {
         if (keyH.upPressed) {
-            y -= speed;
+            entidadeY -= speed;
         } else if (keyH.downPressed) {
-            y += speed;
+            entidadeY += speed;
         } else if (keyH.leftPressed) {
-            x -= speed;
+            entidadeX -= speed;
         } else if (keyH.rightPressed) {
-            x += speed;
+            entidadeX += speed;
         }
     }
 
     public void draw(Graphics2D g2) {
         g2.setColor(Color.WHITE);
-        g2.fillRect(x, y, gp.tileSize, gp.tileSize);
+        g2.fillRect(entidadeX, entidadeY, gp.tileSize, gp.tileSize);
     }
 }
