@@ -12,7 +12,7 @@ public class ControleAmbiente {
 
     public ControleAmbiente(TelaDoJogo gp) {
         this.gp = gp;
-        ambientes = new Ambiente[10];
+        ambientes = new Ambiente[12];
         numAmbientesPisos = new int[gp.maxScreenRow][gp.maxScreenCol];
         getAmbienteImagens();
         carregarMapa("Mapas/mapa.txt");
@@ -49,7 +49,7 @@ public class ControleAmbiente {
             ambientes[6].collision = true;
 
             ambientes[7] = new Ambiente();
-            ambientes[7].image = ImageIO.read(getClass().getClassLoader().getResourceAsStream("Ambiente/ParedeDiagonalBaixoEsquerda.png")); // erro aqui
+            ambientes[7].image = ImageIO.read(getClass().getClassLoader().getResourceAsStream("Ambiente/ParedeDiagonalBaixoEsquerda.png"));
             ambientes[7].collision = true;
 
             ambientes[8] = new Ambiente();
@@ -60,7 +60,9 @@ public class ControleAmbiente {
             ambientes[9].image = ImageIO.read(getClass().getClassLoader().getResourceAsStream("Ambiente/CimaEsquerdaMesa.png"));
             ambientes[9].collision = true;
 
-
+            ambientes[10] = new Ambiente();
+            ambientes[10].image = ImageIO.read(getClass().getClassLoader().getResourceAsStream("Ambiente/Banquinho.png"));
+            ambientes[10].collision = true;
 
             if (ambientes[0].image == null) {
                 throw new IOException("Imagem 'Piso/Piso.png' não encontrada.");

@@ -2,6 +2,8 @@ package pegaPrea;
 
 import Ambiente.ControleAmbiente;
 import Entidades.JogadorAzul;
+import Entidades.JogadorLaranja;
+import Entidades.JogadorRosa;
 
 import javax.swing.*;
 import java.awt.*;
@@ -25,6 +27,8 @@ public class TelaDoJogo extends JPanel implements Runnable {
     Thread gameThread; // mantem o programa funcionando
     public ChecaColisao checaColisao = new ChecaColisao(this);
     JogadorAzul jogadorAzul = new JogadorAzul(this, keyH);
+    JogadorLaranja jogadorLaranja = new JogadorLaranja(this, keyH);
+    JogadorRosa jogadorRosa = new JogadorRosa(this, keyH);
 
     public TelaDoJogo() {
         this.setPreferredSize(new Dimension(screenWidth, screenHeight));
@@ -79,6 +83,8 @@ public class TelaDoJogo extends JPanel implements Runnable {
         controleAmbiente.draw(g2);
 
         jogadorAzul.draw(g2);
+        jogadorLaranja.draw(g2);
+        jogadorRosa.draw(g2);
 
         g2.dispose();
     }
