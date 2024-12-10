@@ -2,6 +2,8 @@ package PegaPreaEntregaEdition;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public class JogoGUI extends JFrame {
     private final TabuleiroLogica tabuleiroLogica = new TabuleiroLogica(); // Classe que controla a lógica do jogo
@@ -12,9 +14,44 @@ public class JogoGUI extends JFrame {
 
     public JogoGUI() {
         setTitle("Jogo de Tabuleiro"); // Define o título da janela
-        setSize(800, 600); // Define o tamanho da janela
+        setSize(1000, 700); // Define o tamanho da janela
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // Finaliza o programa ao fechar a janela
         setLayout(new BorderLayout()); // Define o layout principal
+        JMenuBar menuBar = new JMenuBar();
+        JMenu jogoMenu = new JMenu("Jogo");
+        JMenuItem reiniciarItem = new JMenuItem("Reiniciar");
+        JMenuItem sairItem = new JMenuItem("Sair");
+        jogoMenu.add(reiniciarItem);
+        jogoMenu.add(sairItem);
+        JMenu autoriaMenu = new JMenu("Autoria");
+        JMenuItem verNomesItem = new JMenuItem("Ver Nomes");
+        autoriaMenu.add(verNomesItem);
+        menuBar.add(jogoMenu);
+        menuBar.add(autoriaMenu);
+        setJMenuBar(menuBar);
+
+        reiniciarItem.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                reiniciarJogo(); // Reinicia o jogo
+            }
+        });
+
+        // Ação do menu "Sair"
+        sairItem.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                System.exit(0);
+            }
+        });
+
+        verNomesItem.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // Exibe os nomes dos autores
+                JOptionPane.showMessageDialog(JogoGUI.this, "Autores do Jogo: Eduardo Dutra Ferreira e Alessando Velasques");
+            }
+        });
 
         inicializarInterface(); // Configura os componentes da interface gráfica
     }
@@ -77,7 +114,7 @@ public class JogoGUI extends JFrame {
                         botao.setBackground(Color.BLACK);
                         botao.setEnabled(false);
                     }
-                    case -1 -> { // Posição moovimento limitado
+                    case -1 -> { // Posição com movimento limitado
                         botao.setBackground(Color.LIGHT_GRAY);
                     }
                     case 1, 2, 3 -> {
@@ -110,12 +147,5 @@ public class JogoGUI extends JFrame {
         pecaSelecionada = 0; // Reseta a peça selecionada
         etiquetaTurno.setText("Vez de: Time Azul (P1, P2, P3)"); // Atualiza o rótulo inicial
         atualizarInterface(); // Atualiza a interface gráfica
-    }
-
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> {
-            JogoGUI jogo = new JogoGUI();
-            jogo.setVisible(true);
-        });
     }
 }
