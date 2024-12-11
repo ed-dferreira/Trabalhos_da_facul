@@ -1,15 +1,13 @@
 package PegaPreaEntregaEdition;
 
-import java.util.Arrays;
-
-public class TabuleiroLogica {
+public class Tabuleiro {
     private final int[][] tabuleiro = new int[3][5];
 
-    public TabuleiroLogica() {
-        inicializarTabuleiro();
+    public Tabuleiro() {
+        inicializar();
     }
 
-    public void inicializarTabuleiro() {
+    public void inicializar() {
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 5; j++) {
                 tabuleiro[i][j] = 0;
@@ -55,14 +53,14 @@ public class TabuleiroLogica {
             return false;  // A célula de origem não é válida para o movimento
         }
 
-        int rows = tabuleiro.length;
-        int cols = tabuleiro[0].length;
+        int linhas = tabuleiro.length;
+        int colunas = tabuleiro[0].length;
 
         // Verifica as posições adjacentes (diagonais, verticais e horizontais)
         if (linha - 1 >= 0 && coluna - 1 >= 0 && tabuleiro[linha - 1][coluna - 1] == peca) {
             return true;
         }
-        if (linha + 1 < rows && coluna - 1 >= 0 && tabuleiro[linha + 1][coluna - 1] == peca) {
+        if (linha + 1 < linhas && coluna - 1 >= 0 && tabuleiro[linha + 1][coluna - 1] == peca) {
             // Movimento Baixo Esquerda
             return true;
         }
@@ -71,7 +69,7 @@ public class TabuleiroLogica {
             // Movimento Cima
             return true;
         }
-        if (linha + 1 < rows && tabuleiro[linha + 1][coluna] == peca) {
+        if (linha + 1 < linhas && tabuleiro[linha + 1][coluna] == peca) {
             // Movimento Baixo
             return true;
         }
@@ -89,8 +87,8 @@ public class TabuleiroLogica {
             return false;  // A célula de origem não é válida para o movimento
         }
 
-        int rows = tabuleiro.length;
-        int cols = tabuleiro[0].length;
+        int linhas = tabuleiro.length;
+        int colunas = tabuleiro[0].length;
 
         if (tabuleiro[linha][coluna] == 0) {
             // Verifica as posições adjacentes (diagonais, verticais e horizontais)
@@ -98,15 +96,15 @@ public class TabuleiroLogica {
                 // Movimento Cima Esquerda
                 return true;
             }
-            if (linha - 1 >= 0 && coluna + 1 < cols && tabuleiro[linha - 1][coluna + 1] == peca) {
+            if (linha - 1 >= 0 && coluna + 1 < colunas && tabuleiro[linha - 1][coluna + 1] == peca) {
                 // Movimento Cima Direita
                 return true;
             }
-            if (linha + 1 < rows && coluna + 1 < cols && tabuleiro[linha + 1][coluna + 1] == peca) {
+            if (linha + 1 < linhas && coluna + 1 < colunas && tabuleiro[linha + 1][coluna + 1] == peca) {
                 // Movimento Baixo Direita
                 return true;
             }
-            if (linha + 1 < rows && coluna - 1 >= 0 && tabuleiro[linha + 1][coluna - 1] == peca) {
+            if (linha + 1 < linhas && coluna - 1 >= 0 && tabuleiro[linha + 1][coluna - 1] == peca) {
                 // Movimento Baixo Esquerda
                 return true;
             }
@@ -116,11 +114,11 @@ public class TabuleiroLogica {
                 // Movimento Cima
                 return true;
             }
-            if (linha + 1 < rows && tabuleiro[linha + 1][coluna] == peca) {
+            if (linha + 1 < linhas && tabuleiro[linha + 1][coluna] == peca) {
                 // Movimento Baixo
                 return true;
             }
-            if (coluna + 1 < cols && tabuleiro[linha][coluna + 1] == peca) {
+            if (coluna + 1 < colunas && tabuleiro[linha][coluna + 1] == peca) {
                 // Movimento Direita
                 return true;
             }
@@ -135,11 +133,11 @@ public class TabuleiroLogica {
                 // Movimento Cima
                 return true;
             }
-            if (linha + 1 < rows && tabuleiro[linha + 1][coluna] == peca) {
+            if (linha + 1 < linhas && tabuleiro[linha + 1][coluna] == peca) {
                 // Movimento Baixo
                 return true;
             }
-            if (coluna + 1 < cols && tabuleiro[linha][coluna + 1] == peca) {
+            if (coluna + 1 < colunas && tabuleiro[linha][coluna + 1] == peca) {
                 // Movimento Direita
                 return true;
             }
@@ -153,16 +151,15 @@ public class TabuleiroLogica {
     }
 
     public void moverPeca(int linha, int coluna, int peca) {
-        espacoEspecial();
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 5; j++) {
                 if (tabuleiro[i][j] == peca) {
                     tabuleiro[i][j] = 0; // Remove a peça da posição antiga
+                    espacoEspecial();
                 }
             }
         }
         tabuleiro[linha][coluna] = peca; // Coloca a peça na nova posição
-        espacoEspecial();
     }
 
     public void espacoEspecial(){
@@ -197,38 +194,12 @@ public class TabuleiroLogica {
         return false; // Retorna false se não houver vitória ou empate
     }
 
-    public boolean vitoriaEstudantes() { // precisa ser verificado
-        // Time Azul vence se PP está cercado
-        int linhaPP = -1, colunaPP = -1;
-        for (int i = 0; i < 3; i++) {
-            for (int j = 0; j < 5; j++) {
-                if (tabuleiro[i][j] == 4) { // Encontra PP
-                    linhaPP = i;
-                    colunaPP = j;
-                    break;
-                }
-            }
-        }
-
-        if (linhaPP != -1 && colunaPP != -1) {
-            int[][] direcoes = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}, {-1, -1}, {-1, 1}, {1, -1}, {1, 1}};
-            for (int[] direcao : direcoes) {
-                int novaLinha = linhaPP + direcao[0];
-                int novaColuna = colunaPP + direcao[1];
-                if (novaLinha >= 0 && novaLinha < 3 && novaColuna >= 0 && novaColuna < 5 && tabuleiro[novaLinha][novaColuna] == 0) {
-                    return false; // PP ainda pode se mover
-                }
-            }
-            return true; // PP está cercado
-        }
+    public boolean vitoriaEstudantes() { // precisa ser verificado e só
+//mexer na interface apos isso
         return false;
     }
 
-    private boolean eJogador(int valor) {
-        return valor == 1 || valor == 2 || valor == 3;
-    }
-
-    public boolean empate() {
+    public boolean empate() { // funciona
         // Verifica se as posições contêm valores 1, 2 ou 3
         if (eJogador(tabuleiro[0][3]) && eJogador(tabuleiro[1][3]) && eJogador(tabuleiro[1][4]) ||
                 eJogador(tabuleiro[2][3]) && eJogador(tabuleiro[1][3]) && eJogador(tabuleiro[1][4])) {
@@ -236,5 +207,9 @@ public class TabuleiroLogica {
             return true;
         }
         return false; // Caso não haja empate
+    }
+
+    private boolean eJogador(int valor) {
+        return valor == 1 || valor == 2 || valor == 3;
     }
 }
