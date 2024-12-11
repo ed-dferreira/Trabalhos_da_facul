@@ -43,126 +43,140 @@ public class TabuleiroLogica {
 
         // Verifica se é um Preá (peça 4)
         if (peca == 4) {
-            return podeMoverPrea(linha, coluna);
+            return podeMoverPrea(linha, coluna, peca);
         }
 
         return false; // Caso a peça não seja reconhecida
     }
 
-
     public boolean podeMoverJogador(int linha, int coluna, int peca) {
-        // Verifica se a célula inicial é inválida (ocupada por peça ou fora do limite)
-        if (tabuleiro[linha][coluna] == -2 || tabuleiro[linha][coluna] == 1 || tabuleiro[linha][coluna] == 2 || tabuleiro[linha][coluna] == 3 || tabuleiro[linha][coluna] == 4)
-            return false;
-
-        // Direções permitidas para o jogador (cima, baixo, direita e diagonais à direita)
-        int[][] direcoes = {
-                {-1, 0}, {1, 0}, {0, 1},  // Movimentos cima, baixo, direita
-                {-1, 1}, {1, 1}           // Movimentos diagonais à direita
-        };
-
-        // Verifica todas as direções possíveis
-        for (int[] direcao : direcoes) {
-            int novaLinha = linha + direcao[0];
-            int novaColuna = coluna + direcao[1];
-
-            // Verifica se a nova posição está dentro dos limites do tabuleiro
-            if (novaLinha >= 0 && novaLinha < tabuleiro.length &&
-                    novaColuna >= 0 && novaColuna < tabuleiro[0].length) {
-
-                // A nova célula deve estar vazia
-                if (tabuleiro[novaLinha][novaColuna] == 0) {
-                    return true; // Movimento permitido
-                }
-            }
+        // Verifica se a célula inicial é válida para o jogador (0 ou -1)
+        if (tabuleiro[linha][coluna] == -2 && tabuleiro[linha][coluna] == 1) {
+            return false;  // A célula de origem não é válida para o movimento
         }
 
-        return false; // Nenhuma posição válida foi encontrada
+        int rows = tabuleiro.length;
+        int cols = tabuleiro[0].length;
+
+        // Verifica as posições adjacentes (diagonais, verticais e horizontais)
+        if (linha - 1 >= 0 && coluna - 1 >= 0 && tabuleiro[linha - 1][coluna - 1] == peca) {
+            return true;
+        }
+        if (linha + 1 < rows && coluna - 1 >= 0 && tabuleiro[linha + 1][coluna - 1] == peca) {
+            // Movimento Baixo Esquerda
+            return true;
+        }
+        // Verifica os movimentos verticais e horizontais
+        if (linha - 1 >= 0 && tabuleiro[linha - 1][coluna] == peca) {
+            // Movimento Cima
+            return true;
+        }
+        if (linha + 1 < rows && tabuleiro[linha + 1][coluna] == peca) {
+            // Movimento Baixo
+            return true;
+        }
+        if (coluna - 1 >= 0 && tabuleiro[linha][coluna - 1] == peca) {
+            // Movimento Esquerda
+            return true;
+        }
+        // Se nenhum movimento válido for encontrado
+        return false;
     }
 
-    public boolean podeMoverPrea(int linha, int coluna) {
-        if (tabuleiro[linha][coluna] == -2 || tabuleiro[linha][coluna] == 1 || tabuleiro[linha][coluna] == 2 || tabuleiro[linha][coluna] == 3)
-            return false;
-
-        // Se o lugar no tabuleiro for -2, limita o movimento às direções verticais e horizontais
-        if (tabuleiro[linha][coluna] == -1) {
-            int[][] direcoesLimitadas = {
-                    {-1, 0}, {1, 0}, {0, -1}, {0, 1}  // Apenas movimentos verticais e horizontais
-            };
-
-            // Verifica as direções limitadas para o caso de célula -2
-            for (int[] direcao : direcoesLimitadas) {
-                int novaLinha = linha + direcao[0];
-                int novaColuna = coluna + direcao[1];
-
-                // Verifica se a nova posição está dentro dos limites do tabuleiro e se a célula está vazia
-                if (novaLinha >= 0 && novaLinha < tabuleiro.length && novaColuna >= 0 && novaColuna < tabuleiro[0].length) {
-                    if (tabuleiro[novaLinha][novaColuna] == 0) { // A célula de destino deve estar vazia
-                        // Verifica se o movimento é de uma casa por vez
-                        if (direcao[0] != 0 && direcao[1] == 0) {  // Movimento para cima/baixo (linha)
-                            if (linha + direcao[0] == novaLinha) return true;
-                        } else if (direcao[1] != 0 && direcao[0] == 0) {  // Movimento para esquerda/direita (coluna)
-                            if (coluna + direcao[1] == novaColuna) return true;
-                        }
-                    }
-                }
-            }
-            return false; // Se não encontrar movimento válido, retorna false
+    public boolean podeMoverPrea(int linha, int coluna, int peca) {
+        // Verifica se a célula inicial é válida para o jogador (0 ou -1)
+        if (tabuleiro[linha][coluna] != 0 && tabuleiro[linha][coluna] != -1) {
+            return false;  // A célula de origem não é válida para o movimento
         }
 
-        // Caso contrário, a peça pode se mover em todas as direções, incluindo diagonais
-        int[][] direcoes = {
-                {-1, 0}, {1, 0}, {0, -1}, {0, 1},  // Movimentos verticais e horizontais
-                {-1, -1}, {-1, 1}, {1, -1}, {1, 1} // Movimentos diagonais
-        };
+        int rows = tabuleiro.length;
+        int cols = tabuleiro[0].length;
 
-        // Verifica todas as direções possíveis
-        for (int[] direcao : direcoes) {
-            int novaLinha = linha + direcao[0];
-            int novaColuna = coluna + direcao[1];
+        if (tabuleiro[linha][coluna] == 0) {
+            // Verifica as posições adjacentes (diagonais, verticais e horizontais)
+            if (linha - 1 >= 0 && coluna - 1 >= 0 && tabuleiro[linha - 1][coluna - 1] == peca) {
+                // Movimento Cima Esquerda
+                return true;
+            }
+            if (linha - 1 >= 0 && coluna + 1 < cols && tabuleiro[linha - 1][coluna + 1] == peca) {
+                // Movimento Cima Direita
+                return true;
+            }
+            if (linha + 1 < rows && coluna + 1 < cols && tabuleiro[linha + 1][coluna + 1] == peca) {
+                // Movimento Baixo Direita
+                return true;
+            }
+            if (linha + 1 < rows && coluna - 1 >= 0 && tabuleiro[linha + 1][coluna - 1] == peca) {
+                // Movimento Baixo Esquerda
+                return true;
+            }
 
-            // Verifica se a nova posição está dentro dos limites do tabuleiro e se a célula está vazia
-            if (novaLinha >= 0 && novaLinha < tabuleiro.length && novaColuna >= 0 && novaColuna < tabuleiro[0].length) {
-                if (tabuleiro[novaLinha][novaColuna] == 0) { // A célula de destino deve estar vazia
-                    // Verifica se o movimento é de uma casa por vez
-                    if (direcao[0] != 0 && direcao[1] == 0) {  // Movimento para cima/baixo (linha)
-                        if (linha + direcao[0] == novaLinha) return true;
-                    } else if (direcao[1] != 0 && direcao[0] == 0) {  // Movimento para esquerda/direita (coluna)
-                        if (coluna + direcao[1] == novaColuna) return true;
-                    } else if (direcao[0] != 0 && direcao[1] != 0) { // Movimento diagonal
-                        if (novaLinha == linha + direcao[0] && novaColuna == coluna + direcao[1]) {
-                            return true;
-                        }
-                    }
-                }
+            // Verifica os movimentos verticais e horizontais
+            if (linha - 1 >= 0 && tabuleiro[linha - 1][coluna] == peca) {
+                // Movimento Cima
+                return true;
+            }
+            if (linha + 1 < rows && tabuleiro[linha + 1][coluna] == peca) {
+                // Movimento Baixo
+                return true;
+            }
+            if (coluna + 1 < cols && tabuleiro[linha][coluna + 1] == peca) {
+                // Movimento Direita
+                return true;
+            }
+            if (coluna - 1 >= 0 && tabuleiro[linha][coluna - 1] == peca) {
+                // Movimento Esquerda
+                return true;
             }
         }
-
-        return false; // Se não encontrar movimento válido, retorna false
+        if (tabuleiro[linha][coluna] == -1){
+            // Verifica os movimentos verticais e horizontais
+            if (linha - 1 >= 0 && tabuleiro[linha - 1][coluna] == peca) {
+                // Movimento Cima
+                return true;
+            }
+            if (linha + 1 < rows && tabuleiro[linha + 1][coluna] == peca) {
+                // Movimento Baixo
+                return true;
+            }
+            if (coluna + 1 < cols && tabuleiro[linha][coluna + 1] == peca) {
+                // Movimento Direita
+                return true;
+            }
+            if (coluna - 1 >= 0 && tabuleiro[linha][coluna - 1] == peca) {
+                // Movimento Esquerda
+                return true;
+            }
+        }
+        // Se nenhum movimento válido for encontrado
+        return false;
     }
-
 
     public void moverPeca(int linha, int coluna, int peca) {
+        espacoEspecial();
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 5; j++) {
                 if (tabuleiro[i][j] == peca) {
                     tabuleiro[i][j] = 0; // Remove a peça da posição antiga
                 }
-                if (tabuleiro[0][2] != 1 && tabuleiro[0][2] != 2 && tabuleiro[0][2] != 3 && tabuleiro[0][2] != 4 &&
-                        tabuleiro[2][2] != 1 && tabuleiro[2][2] != 2 && tabuleiro[2][2] != 3 && tabuleiro[2][2] != 4 &&
-                        tabuleiro[1][1] != 1 && tabuleiro[1][1] != 2 && tabuleiro[1][1] != 3 && tabuleiro[1][1] != 4 &&
-                        tabuleiro[1][3] != 1 && tabuleiro[1][3] != 2 && tabuleiro[1][3] != 3 && tabuleiro[1][3] != 4) {
-
-                    // Atualiza as posições específicas para -1
-                    tabuleiro[0][2] = -1;
-                    tabuleiro[2][2] = -1;
-                    tabuleiro[1][1] = -1;
-                    tabuleiro[1][3] = -1;
-                }
             }
-
         }
         tabuleiro[linha][coluna] = peca; // Coloca a peça na nova posição
+        espacoEspecial();
+    }
+
+    public void espacoEspecial(){
+        if (tabuleiro[0][2] != 1 && tabuleiro[0][2] != 2 && tabuleiro[0][2] != 3 && tabuleiro[0][2] != 4 &&
+                tabuleiro[2][2] != 1 && tabuleiro[2][2] != 2 && tabuleiro[2][2] != 3 && tabuleiro[2][2] != 4 &&
+                tabuleiro[1][1] != 1 && tabuleiro[1][1] != 2 && tabuleiro[1][1] != 3 && tabuleiro[1][1] != 4 &&
+                tabuleiro[1][3] != 1 && tabuleiro[1][3] != 2 && tabuleiro[1][3] != 3 && tabuleiro[1][3] != 4) {
+
+            // Atualiza as posições específicas para -1
+            tabuleiro[0][2] = -1;
+            tabuleiro[2][2] = -1;
+            tabuleiro[1][1] = -1;
+            tabuleiro[1][3] = -1;
+        }
     }
 
     public boolean vitoriaPrea() { // funciona
