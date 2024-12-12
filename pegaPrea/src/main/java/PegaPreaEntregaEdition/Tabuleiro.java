@@ -1,16 +1,10 @@
 package PegaPreaEntregaEdition;
 
 /*
-Falta Movimentos inválidos não são
-permitidos e o controle é feito
-por meio de exceções
 
 Na pratica usar as exceções
 
-Falta verificar a vitoria dos estudante o que é critico
  */
-
-
 
 public class Tabuleiro {
     private final int[][] tabuleiro = new int[3][5];
@@ -214,12 +208,12 @@ public class Tabuleiro {
                     boolean cercado = true;
 
                     // Verifica movimentos cardeais (cima, baixo, esquerda, direita)
-                    int[] dxCardeais = {-1, 1, 0, 0};
-                    int[] dyCardeais = {0, 0, -1, 1};
+                    int[] cardeaisX = {-1, 1, 0, 0};
+                    int[] cardeaisY = {0, 0, -1, 1};
 
-                    for (int k = 0; k < dxCardeais.length; k++) {
-                        int novaLinha = i + dxCardeais[k];
-                        int novaColuna = j + dyCardeais[k];
+                    for (int k = 0; k < cardeaisX.length; k++) {
+                        int novaLinha = i + cardeaisX[k];
+                        int novaColuna = j + cardeaisY[k];
 
                         if (movimentoValido(novaLinha, novaColuna)) {
                             cercado = false; // O Preá pode se mover
@@ -229,12 +223,12 @@ public class Tabuleiro {
 
                     // Se o Preá está em um espaço especial (-1), verifica movimentos diagonais
                     if (tabuleiro[i][j] == -1 && cercado) {
-                        int[] dxDiagonais = {-1, -1, 1, 1};
-                        int[] dyDiagonais = {-1, 1, -1, 1};
+                        int[] diagonaisX = {-1, -1, 1, 1};
+                        int[] diagonaisY = {-1, 1, -1, 1};
 
-                        for (int k = 0; k < dxDiagonais.length; k++) {
-                            int novaLinha = i + dxDiagonais[k];
-                            int novaColuna = j + dyDiagonais[k];
+                        for (int k = 0; k < diagonaisX.length; k++) {
+                            int novaLinha = i + diagonaisX[k];
+                            int novaColuna = j + diagonaisY[k];
 
                             if (movimentoValido(novaLinha, novaColuna)) {
                                 cercado = false; // O Preá pode se mover diagonalmente
@@ -242,7 +236,6 @@ public class Tabuleiro {
                             }
                         }
                     }
-
                     // Retorna verdadeiro se o Preá estiver completamente cercado
                     if (cercado) {
                         return true;
@@ -273,8 +266,3 @@ public class Tabuleiro {
         return valor == 1 || valor == 2 || valor == 3;
     }
 }
-/*
-0 1 2 3 4
-1
-2
- */
