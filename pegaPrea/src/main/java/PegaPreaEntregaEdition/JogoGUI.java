@@ -74,23 +74,26 @@ public class JogoGUI extends JFrame {
 
     private void tratarClique(int linha, int coluna) {
         int[][] tabuleiroTemp = this.tabuleiro.getTabuleiro(); // Obtém o estado atual do tabuleiroTemp
-
         if (pecaSelecionada == 0) {
+            atualizarInterface();
             if ((vezEstudantes && tabuleiroTemp[linha][coluna] >= 1 && tabuleiroTemp[linha][coluna] <= 3) ||
                     (!vezEstudantes && tabuleiroTemp[linha][coluna] == 4)) {
                 pecaSelecionada = tabuleiroTemp[linha][coluna];
-                etiquetaTurno.setText("Peça selecionada: P" + pecaSelecionada);
+                etiquetaTurno.setText("Vez dos Estudantes" + pecaSelecionada);
             }
-        } else {
+        } else { // mudanças de turno
             if (this.tabuleiro.podeMover(linha, coluna, pecaSelecionada)) {
                 this.tabuleiro.moverPeca(linha, coluna, pecaSelecionada); // Move a peça
                 if (this.tabuleiro.verificarVitoria()) { // Verifica se houve vitória
                     mostrarVitoria(); // Mostra a mensagem de vitória
+                }else if (this.tabuleiro.verificarEmpate()) {
+                    mostrarEmpate();
                 } else {
+                    tabuleiro.espacoEspecial();
                     vezEstudantes = !vezEstudantes; // Alterna o turno
                     etiquetaTurno.setText(vezEstudantes ? "Vez dos Estudantes" : "Vez do Preá");
                 }
-                pecaSelecionada = 0; // Reseta a peça selecionada
+                pecaSelecionada = 0; // Reseta a peça selecionada]
                 atualizarInterface(); // Atualiza a interface gráfica
             }
         }
@@ -110,6 +113,7 @@ public class JogoGUI extends JFrame {
                     }
                     case -1 -> { // Posição com movimento limitado
                         botao.setBackground(Color.LIGHT_GRAY);
+                        tabuleiro.espacoEspecial();
                     }
                     case 1, 2, 3 -> {
                         botao.setBackground(Color.GREEN);
@@ -128,7 +132,8 @@ public class JogoGUI extends JFrame {
     }
 
     private void mostrarEmpate() {
-        String mensagem = "Os jogadores empataram";
+        boolean empate = tabuleiro.verificarEmpate();
+        String mensagem = empate ? "Empate!" : " ";
         JOptionPane.showMessageDialog(this, mensagem);
         reiniciarJogo();
     }

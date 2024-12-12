@@ -170,7 +170,7 @@ public class Tabuleiro {
         return true;
     }
 
-    // metodo empate
+    // metodo verificarEmpate
 
     public boolean verificarVitoria() {
         if (verificarVitoriaPrea()) {
