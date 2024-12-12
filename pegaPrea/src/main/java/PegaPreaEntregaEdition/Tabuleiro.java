@@ -60,7 +60,7 @@ public class Tabuleiro {
 
     public boolean movimentoEstudante(int linha, int coluna, int peca) {
         // Verifica se a célula inicial é válida para o jogador (0 ou -1)
-        if (tabuleiro[linha][coluna] == -2 && tabuleiro[linha][coluna] == 1) {
+        if (tabuleiro[linha][coluna] != 0 && tabuleiro[linha][coluna] != -1) {
             return false;  // A célula de origem não é válida para o movimento
         }
 
@@ -165,9 +165,11 @@ public class Tabuleiro {
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 5; j++) {
                 if (tabuleiro[i][j] == peca) {
-                    tabuleiro[i][j] = 0; // Remove a peça da posição antiga
-                    espacoEspecial();
-                }
+                    if (tabuleiro[linha][coluna] != 1 || tabuleiro[linha][coluna] != 2 || tabuleiro[linha][coluna] != 3 || tabuleiro[linha][coluna] != 4) {
+                            tabuleiro[i][j] = 0; // Remove a peça da posição antiga
+                            espacoEspecial();
+                        }
+                    }
             }
         }
         tabuleiro[linha][coluna] = peca; // Coloca a peça na nova posição
