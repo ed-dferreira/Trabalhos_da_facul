@@ -13,7 +13,7 @@ public class JogoGUI extends JFrame {
     private JLabel etiquetaTurno; // Label que exibe informações sobre o turno atual
 
     public JogoGUI() {
-        setTitle("PEGA PREÁ"); // Define o título da janela
+        setTitle("Pega Preá"); // Define o título da janela
         setSize(1000, 700); // Define o tamanho da janela
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // Finaliza o programa ao fechar a janela
         setLayout(new BorderLayout()); // Define o layout principal
@@ -79,7 +79,11 @@ public class JogoGUI extends JFrame {
             if ((vezEstudantes && tabuleiroTemp[linha][coluna] >= 1 && tabuleiroTemp[linha][coluna] <= 3) ||
                     (!vezEstudantes && tabuleiroTemp[linha][coluna] == 4)) {
                 pecaSelecionada = tabuleiroTemp[linha][coluna];
-                etiquetaTurno.setText("Vez dos Estudantes" + pecaSelecionada);
+                if (pecaSelecionada == 1 || pecaSelecionada == 2 || pecaSelecionada == 3) {
+                    etiquetaTurno.setText("Estudante " + pecaSelecionada + " selecionado");
+                } else {
+                    etiquetaTurno.setText("Preá Selecionado");
+                }
             }
         } else { // mudanças de turno
             if (this.tabuleiro.podeMover(linha, coluna, pecaSelecionada)) {
