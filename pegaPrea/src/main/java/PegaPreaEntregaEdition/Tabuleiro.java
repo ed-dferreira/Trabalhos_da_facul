@@ -1,5 +1,17 @@
 package PegaPreaEntregaEdition;
 
+/*
+Falta Movimentos inválidos não são
+permitidos e o controle é feito
+por meio de exceções
+
+Na pratica usar as exceções
+
+Falta verificar a vitoria dos estudante o que é critico
+ */
+
+
+
 public class Tabuleiro {
     private final int[][] tabuleiro = new int[3][5];
 
@@ -193,12 +205,48 @@ public class Tabuleiro {
         return false; // Retorna false se não houver vitória ou verificarEmpate
     }
 
-    public boolean vitoriaEstudantes() { // precisa ser verificado e só
-        //mexer na interface apos isso
-        return false;
+    public boolean vitoriaEstudantes() {
+        for (int i = 0; i < tabuleiro.length; i++) {
+            for (int j = 0; j < tabuleiro[i].length; j++) {
+                if (tabuleiro[i][j] == 4) {
+                    // Verificar se está cercada nas 4 direções cardeais (sem diagonais)
+                    boolean cercada = true;
+
+                    // Definir as 4 direções ao redor da peça (cima, baixo, esquerda, direita)
+                    int[] dx = {-1, 1, 0, 0}; // Movimentos para cima, baixo, esquerda e direita
+                    int[] dy = {0, 0, -1, 1}; // Movimentos para cima, baixo, esquerda e direita
+
+                    for (int k = 0; k < 4; k++) {
+                        int novaLinha = i + dx[k];
+                        int novaColuna = j + dy[k];
+
+                        // Verificar se a posição está dentro dos limites do tabuleiro (evitar -1 e -2)
+                        if (novaLinha >= 0 && novaLinha < tabuleiro.length && novaColuna >= 0 && novaColuna < tabuleiro[i].length) {
+                            // Verificar se a posição ao redor é ocupada por um jogador
+                            if (!eJogador(tabuleiro[novaLinha][novaColuna])) {
+                                cercada = false;
+                                break;
+                            }
+                        } else {
+                            // Se a posição estiver fora dos limites, considerar como não cercada
+                            cercada = false;
+                            break;
+                        }
+                    }
+
+                    // Retorna se a peça está cercada
+                    if (cercada) {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false; // Se não encontrar nenhuma peça 4 cercada
     }
 
-    public boolean verificarEmpate() {
+
+
+        public boolean verificarEmpate() {
         if ((eJogador(tabuleiro[0][3]) && eJogador(tabuleiro[1][3]) && eJogador(tabuleiro[1][4])) ||
                 (eJogador(tabuleiro[2][3]) && eJogador(tabuleiro[1][3]) && eJogador(tabuleiro[1][4])) ||
                 (eJogador(tabuleiro[0][3]) && eJogador(tabuleiro[1][3]) && eJogador(tabuleiro[2][3]))) {
