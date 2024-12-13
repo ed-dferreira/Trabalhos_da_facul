@@ -1,22 +1,21 @@
-package PegaPreaEntregaEdition;
-
+package PegaPreaPack;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class JogoGUI extends JFrame {
+public class InterfaceJogo extends JFrame {
     private final Tabuleiro tabuleiro = new Tabuleiro(); // Classe que controla a lógica do jogo
-    private final JButton[][] botoesTabuleiro = new JButton[3][5]; // Botões que representam o tabuleiro na interface gráfica
-    private boolean vezEstudantes = true; // Indica de quem é a vez: true = time azul, false = time vermelho
-    private int pecaSelecionada = 0; // Identifica a peça atualmente selecionada
-    private JLabel etiquetaTurno; // Label que exibe informações sobre o turno atual
+    private final JButton[][] botoesTabuleiro = new JButton[3][5]; // Botões que representam a interface gráfica
+    private boolean vezEstudantes = true;
+    private int pecaSelecionada = 0;
+    private JLabel etiquetaTurno; // LAbel para mostrar quem joga
 
-    public JogoGUI() {
-        setTitle("Pega Preá"); // Define o título da janela
-        setSize(1000, 700); // Define o tamanho da janela
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // Finaliza o programa ao fechar a janela
-        setLayout(new BorderLayout()); // Define o layout principal
+    public InterfaceJogo() {
+        setTitle("Pega Preá");
+        setSize(1000, 700);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setLayout(new BorderLayout());
         JMenuBar barraMenu = new JMenuBar();
         JMenu jogoMenu = new JMenu("Menu jogo");
         JMenuItem reiniciarMenu = new JMenuItem("Reiniciar");
@@ -35,23 +34,22 @@ public class JogoGUI extends JFrame {
             }
         });
 
-        // Ação do menu "Sair"
         sairMenu.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 System.exit(0);
-            }
+            }  // Sair do Jogo
         });
 
         verNomesItem.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 // Exibe os nomes dos autores
-                JOptionPane.showMessageDialog(JogoGUI.this, "Criadores do Jogo: Eduardo Dutra Ferreira e Alessando Velasques");
+                JOptionPane.showMessageDialog(InterfaceJogo.this, "Criadores do Jogo: Eduardo Dutra Ferreira e Alessando Velasques");
             }
         });
         inicializarInterface();
-    }
+    } // termina o construtor
 
     private void inicializarInterface() {
         JPanel painelTabuleiro = new JPanel(new GridLayout(3, 5));
@@ -73,37 +71,37 @@ public class JogoGUI extends JFrame {
     }
 
     private void tratarClique(int linha, int coluna) {
-        int[][] tabuleiroTemp = this.tabuleiro.getTabuleiro(); // Obtém o estado atual do tabuleiroTemp
+        int[][] tabuleiroTemp = this.tabuleiro.getTabuleiro(); // Obtém o estado atual do tabuleiro
         if (pecaSelecionada == 0) {
             atualizarInterface();
             if ((vezEstudantes && tabuleiroTemp[linha][coluna] >= 1 && tabuleiroTemp[linha][coluna] <= 3) ||
-                    (!vezEstudantes && tabuleiroTemp[linha][coluna] == 4)) {
+                    (!vezEstudantes && tabuleiroTemp[linha][coluna] == 4)) { // verifica se selecionou alguma peça valida que no caso é um botão
                 pecaSelecionada = tabuleiroTemp[linha][coluna];
-                if (pecaSelecionada == 1 || pecaSelecionada == 2 || pecaSelecionada == 3) {
+                if (pecaSelecionada == 1 || pecaSelecionada == 2 || pecaSelecionada == 3) { // esse if e else é só para label
                     etiquetaTurno.setText("Estudante " + pecaSelecionada + " selecionado");
                 } else {
                     etiquetaTurno.setText("Preá Selecionado");
                 }
             }
         } else { // mudanças de turno
-            if (this.tabuleiro.podeMover(linha, coluna, pecaSelecionada)) {
-                this.tabuleiro.moverPeca(linha, coluna, pecaSelecionada); // Move a peça
+            if (this.tabuleiro.podeMover(linha, coluna, pecaSelecionada)) {  // aqui é bruxaria das mais malignas
+                this.tabuleiro.moverPeca(linha, coluna, pecaSelecionada); // Manda a peça para o metodo moverPeca que separa entre os estudante e prea que faz toda a verificação de movimento
                 if (this.tabuleiro.verificarVitoria()) { // Verifica se houve vitória
-                    mostrarVitoria(); // Mostra a mensagem de vitória
+                    mostrarVitoria(); // Mostra a mensagem
                 }else if (this.tabuleiro.verificarEmpate()) {
                     mostrarEmpate();
                 } else {
-                    tabuleiro.espacoEspecial();
+                    tabuleiro.espacoEspecial(); // garante que vai por o -1
                     vezEstudantes = !vezEstudantes; // Alterna o turno
-                    etiquetaTurno.setText(vezEstudantes ? "Vez dos Estudantes" : "Vez do Preá");
+                    etiquetaTurno.setText(vezEstudantes ? "Vez dos Estudantes" : "Vez do Preá"); // muda a label
                 }
-                pecaSelecionada = 0; // Reseta a peça selecionada]
-                atualizarInterface(); // Atualiza a interface gráfica
+                pecaSelecionada = 0; // Reseta a peça
+                atualizarInterface();
             }
         }
     }
 
-    private void atualizarInterface() {
+    private void atualizarInterface() { // no geral só le o tabuleiro e pôe a cor e numero
         int[][] tabuleiroTemp = this.tabuleiro.getTabuleiro();
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 5; j++) {
@@ -154,7 +152,7 @@ public class JogoGUI extends JFrame {
         tabuleiro.inicializar(); // Reseta o tabuleiro
         vezEstudantes = true; // Reseta o turno
         pecaSelecionada = 0; // Reseta a peça selecionada
-        etiquetaTurno.setText("Vez dos Estudantes"); // Atualiza o rótulo inicial
-        atualizarInterface(); // Atualiza a interface gráfica
+        etiquetaTurno.setText("Vez dos Estudantes"); // Atualiza a label
+        atualizarInterface(); // Atualiza a interface
     }
 }
